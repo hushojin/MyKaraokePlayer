@@ -1,0 +1,2 @@
+Main-class: MyKaraokePlayer
+Class-path: ../../../../pakkeji/tritonus_share-0.3.6.jar ../../../../pakkeji/jl1.0.1.jar ../../../../pakkeji/mp3spi1.9.5.jar
