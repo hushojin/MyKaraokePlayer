@@ -55,7 +55,7 @@ public class SB extends Panel {
                            order=(double)pnp.maxMicro/1000000.0;
                        }
                        label.setText(String.valueOf((int)order/60)+":"+(order%60<10?"0":"")+String.valueOf((int)order%60));
-                    }else{System.out.print("‚â‚Á‚Ï‚è‚È");}
+                    }
                 }
             }
         );

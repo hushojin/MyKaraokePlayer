@@ -35,6 +35,9 @@ public class Gamen extends Frame {
         setMenuBar(m);
         add(pnList);
         add(pnPlayer);pnPlayer.setBackground(Color.gray);
+        try{
+          setIconImage(javax.imageio.ImageIO.read(new File("MKPicon1.png")));
+        }catch(IOException e){}
     }
     
     public void setMB(MB mb){
