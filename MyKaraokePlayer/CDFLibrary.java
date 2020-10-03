@@ -1,168 +1,79 @@
+import java.sql.*;
 import java.io.*;
 import java.util.*;
 
 public class CDFLibrary{
-    static List<ChooseDataSong> cdss;
-    static List<ChooseDataList> cdls;
+    static Connection conn;
+    static List<ChooseDataList> cdls;  //プレイリスト用のデータベースの設計が詰められてないのでまだデータベースにしない。2020/10/03
     static PnList pnl;
     static{
-        reload(true);
-        reload(false);
+        try{
+            String url="jdbc:mysql://localhost/mykaraokeplayerdb?useUnicode=true&useJDBCCompliantTimezoneShift=true&serverTimezone=UTC";
+            String user="mkp";
+            String pass="pass";
+            conn=DriverManager.getConnection(url,user,pass);
+        }catch(SQLException e){e.printStackTrace();}
+        reload();
     }
     public static void setPnList(PnList pnl){
         CDFLibrary.pnl = pnl;
         ChooseData[] a = new ChooseData[0];
-        pnl.lupdate(cdss.toArray(a));
+        pnl.lupdate(getCDSs());
     }
     
     public static void update(String f,boolean isSong){
         if(isSong){
-            ChooseData[] a = new ChooseData[0];
-            pnl.lupdate(cdss.toArray(a));
-            List<ChooseDataSong> result = new ArrayList<ChooseDataSong>(0);
-            for(ChooseDataSong all : cdss){
-                if(all.getName().startsWith(f)){
-                    result.add(all);
-                }
-            }
-            pnl.lupdate(result.toArray(a));
+            pnl.lupdate(getMatchCDSs(f));
             
         }else{
-            ChooseData[] a = new ChooseData[0];
-            pnl.lupdate(cdls.toArray(a));
             List<ChooseDataList> result = new ArrayList<ChooseDataList>(0);
             for(ChooseDataList all : cdls){
                 if(all.getName().startsWith(f)){
                     result.add(all);
                 }
             }
-            pnl.lupdate(result.toArray(a));
+            pnl.lupdate(result.toArray(new ChooseData[0]));
         }
     }
-    public static void reload(boolean isSong){
-        System.out.println("CDFL.reload:isSong"+isSong);
-        if(isSong){
-            try(FileReader fr = new FileReader("C:\\Users\\Owner\\Desktop\\Karaokewavs\\S.MKP")){
-                cdss = sFileRead(fr);
-            }catch(FileNotFoundException e){
-                System.out.println("S.MKPが開けませんでした。");
-            }catch(IOException e){
-                System.out.println("reloadS:frが閉じられませんでした。");
-            }
-        }
-        else{
-            try(FileReader fr = new FileReader("C:\\Users\\Owner\\Desktop\\Karaokewavs\\L.MKP")){
-                cdls = lFileRead(fr);
-            }catch(FileNotFoundException e){
-                System.out.println("L.MKPが開けませんでした。");
-            }catch(IOException e){
-                System.out.println("reloadL:frが閉じられませんでした。");
-            }
+    public static void reload(){
+        try(FileReader fr = new FileReader("C:\\Users\\Owner\\Desktop\\Karaokewavs\\L.MKP")){
+            cdls = lFileRead(fr);
+        }catch(FileNotFoundException e){
+            System.out.println("L.MKPが開けませんでした。");
+        }catch(IOException e){
+            System.out.println("reloadL:frが閉じられませんでした。");
         }
     }
     
     public static void songEdit(ChooseDataSong cds){
-        File s = new File("C:\\Users\\Owner\\Desktop\\Karaokewavs\\S.MKP");
-        File tmps = new File("C:\\Users\\Owner\\Desktop\\Karaokewavs\\tmpS.MKP");
-        int target = getSongNumber(cds.getFname());
-        int d;
-        String str=null;
-        try(FileReader fr = new FileReader(s);FileWriter fw = new FileWriter(tmps)){
-            //編集部前まで書き写し
-            for(int i=0;i<target;i++){
-                for(int j=0;j<8;j++){
-                    while( (d = fr.read()) != 10){
-                        str = (str == null ? "" : str )+ (char)d;
-                    }
-                    if(str!=null){
-                        fw.write(str);
-                        str = null;
-                    }
-                    fw.write(10);
-                }
-            }
-            
-            
-            //編集後データの差し込み
-            fw.write(10);
-            
-            fw.write(cds.getFname());//fname
-            fw.write(10);
-            fw.write(cds.getName());//name
-            fw.write(10);
-            fw.write(String.valueOf(cds.getGrade()));//grade
-            fw.write(10);
-            fw.write(cds.getComment());//comment
-            fw.write(10);
-            fw.write(cds.getDate());//date
-            fw.write(10);
-            fw.write(cds.getWith());//with
-            fw.write(10);
-            fw.write(cds.getScore());//score
-            fw.write(10);
-            
-            //編集された元データ分の読み飛ばし八行
-            for(int j=0;j<8;j++){
-                while( (d = fr.read()) != 10){}
-            }
-            
-            //編集部後を書き写し
-            while(fr.read() != -1){
-                fw.write(10);
-                for(int j=0;j<7;j++){
-                    while( (d = fr.read()) != 10){
-                        str = (str == null ? "" : str )+ (char)d;
-                    }
-                    if(str != null){
-                        fw.write(str);
-                        str = null;
-                    }
-                    fw.write(10);
-                }
-            }
-            
-            fw.flush();
-            
-        }catch(FileNotFoundException e){
-            System.out.println(e);
-        }catch(IOException e){
-            System.out.println(e);
-        }
-        
         try{
-            System.out.println("SEdit.s.delate"+s.delete());
-            System.out.println("SEdit.rename"+tmps.renameTo(new File("C:\\Users\\Owner\\Desktop\\Karaokewavs\\S.MKP")));
-        }catch(SecurityException e){
+            PreparedStatement ps=conn.prepareCall(
+                "update songs set"+
+                " title="+cds.getName()+
+                ",eval="+cds.getGrade()+
+                ",date="+cds.getDate()+
+                ",score="+cds.getScore()+
+                ",comm"+cds.getComment()+
+                ",comp"+cds.getWith()+
+                " where file='"+cds.getFname()+"'"
+            );
+            ps.executeUpdate();
+        }catch(SQLException e){
             System.out.println(e);
         }
-        reload(true);
     }
     
     public static void addNewSongData(String fname,String name,int grade,String comment,String date,String with,String score){
-        try (FileWriter fw = new FileWriter("C:\\Users\\Owner\\Desktop\\Karaokewavs\\S.MKP",true)){
-            
-            fw.write(10);
-            
-            fw.write(fname);//fname
-            fw.write(10);
-            fw.write(name);//name
-            fw.write(10);
-            fw.write(String.valueOf(grade));//grade
-            fw.write(10);
-            fw.write(comment);//comment
-            fw.write(10);
-            fw.write(date);//date
-            fw.write(10);
-            fw.write(with);//with
-            fw.write(10);
-            fw.write(score);//score
-            fw.write(10);
-            
-            fw.flush();
-        } catch (IOException e) {
+        try{
+            PreparedStatement ps=conn.prepareCall(
+                "insert into songs values ("+
+                "defaut,"+name+","+fname+","+grade+","+date+","+score+","+comment+","+with
+                +")"
+            );
+            ps.executeUpdate();
+        }catch(SQLException e){
             System.out.println(e);
         }
-        reload(true);
     }
     
     public static void addNewPlayListData(String name,int[] cdss){
@@ -181,7 +92,7 @@ public class CDFLibrary{
         } catch (IOException e) {
             System.out.println(e);
         }
-        reload(false);
+        reload();
     }
     
     public static void playListDelete(int target){
@@ -243,7 +154,7 @@ public class CDFLibrary{
         }catch(SecurityException e){
             System.out.println(e);
         }
-        reload(false);
+        reload();
         
     }
     
@@ -318,59 +229,8 @@ public class CDFLibrary{
         }catch(SecurityException e){
             System.out.println(e);
         }
-        reload(false);
+        reload();
         
-    }
-    
-    private static List<ChooseDataSong> sFileRead(FileReader fr){
-        List<ChooseDataSong> reads = new ArrayList<ChooseDataSong>(0);
-        int d;
-        String fname;
-        String name;
-        int grade;
-        String comment;
-        String date;
-        String with;
-        String score;
-        
-        try{
-            while( fr.read() != -1){
-                fname = null;
-                name = null;
-                grade = 0;
-                comment = null;
-                date = null;
-                with = null;
-                score = null;
-                
-                while( (d = fr.read()) != -1 && d != 10){
-                    fname = (fname == null ? "" : fname )+ (char)d;
-                }
-                while( (d = fr.read()) != -1 && d != 10){
-                    name = (name == null ? "" : name )+ (char)d;
-                }
-                while( (d = fr.read()) != -1 && d != 10){
-                    grade = 100*grade + d-48;
-                }
-                while( (d = fr.read()) != -1 && d != 10){
-                    comment = (comment == null ? "" : comment )+ (char)d;
-                }
-                while( (d = fr.read()) != -1 && d != 10){
-                    date = (date == null ? "" : date )+ (char)d;
-                }
-                while( (d = fr.read()) != -1 && d != 10){
-                    with = (with == null ? "" : with )+ (char)d;
-                }
-                while( (d = fr.read()) != -1 && d != 10){
-                    score = (score == null ? "" : score )+ (char)d;
-                }
-                reads.add(new ChooseDataSong(fname,name,grade,comment,date,with,score));
-            }
-        }catch(IOException e){
-            System.out.println("CDFL.sFileRead:readできなかったそうな。");
-        }
-        
-        return reads;
     }
     
     private static List<ChooseDataList> lFileRead(FileReader fr){
@@ -405,30 +265,126 @@ public class CDFLibrary{
         return reads;
     }
     
+    private static ChooseDataSong[] getMatchCDSs(String s){
+        List<ChooseDataSong> cdss=new ArrayList<>();
+        try{
+            PreparedStatement ps=conn.prepareCall(
+                "select file,title,eval,comm,date,comp,score from songs where title=%"+s+"%"
+            );
+            ResultSet rs=ps.executeQuery(); 
+            while(rs.next()){
+                String fname=rs.getNString(1);
+                String name=rs.getNString(2);
+                int grade=rs.getInt(3);
+                String comment=rs.getNString(4);
+                String date=rs.getNString(5);
+                String with=rs.getNString(6);
+                String score=rs.getNString(7);
+                cdss.add(new ChooseDataSong(fname,name,grade,comment,date,with,score));
+            }
+        }catch(SQLException e){
+            System.out.println(e);
+        }
+        return cdss.toArray(new ChooseDataSong[0]);
+    }
     
-    
+    private static ChooseDataSong[] getCDSs(){
+        List<ChooseDataSong> cdss=new ArrayList<>();
+        try{
+            PreparedStatement ps=conn.prepareCall(
+                "select file,title,eval,comm,date,comp,score from songs"
+            );
+            ResultSet rs=ps.executeQuery(); 
+            while(rs.next()){
+                String fname=rs.getNString(1);
+                String name=rs.getNString(2);
+                int grade=rs.getInt(3);
+                String comment=rs.getNString(4);
+                String date=rs.getNString(5);
+                String with=rs.getNString(6);
+                String score=rs.getNString(7);
+                cdss.add(new ChooseDataSong(fname,name,grade,comment,date,with,score));
+            }
+        }catch(SQLException e){
+            System.out.println(e);
+        }
+        return cdss.toArray(new ChooseDataSong[0]);
+    }
     
     public static String[] getFNames(){
         List<String> fns=new ArrayList<>();
-        for(ChooseDataSong cds:cdss){
-            fns.add(cds.getFname());
+        try{
+            PreparedStatement ps=conn.prepareCall(
+                "select file from songs"
+            );
+            ResultSet rs=ps.executeQuery(); 
+            while(rs.next()){
+                String fname=rs.getNString(1);
+                fns.add(fname);
+            }
+        }catch(SQLException e){
+            System.out.println(e);
         }
-        String[] a=new String[0];
-        return fns.toArray(a);
+        return fns.toArray(new String[0]);
     }
+    
     public static ChooseDataSong getCDS(int i){
-        return cdss.get(i);
+        try{
+            PreparedStatement ps=conn.prepareCall(
+                "select file,title,eval,comm,date,comp,score from songs where id="+i
+            );
+            ResultSet rs=ps.executeQuery(); 
+            if(rs.next()){
+                String fname=rs.getNString(1);
+                String name=rs.getNString(2);
+                int grade=rs.getInt(3);
+                String comment=rs.getNString(4);
+                String date=rs.getNString(5);
+                String with=rs.getNString(6);
+                String score=rs.getNString(7);
+                return new ChooseDataSong(fname,name,grade,comment,date,with,score);
+            }
+        }catch(SQLException e){
+            System.out.println(e);
+        }
+        return null;
+    }
+    
+    public static ChooseDataSong getCDS(String fname){
+        try{
+            PreparedStatement ps=conn.prepareCall(
+                "select title,eval,comm,date,comp,score from songs where file="+fname
+            );
+            ResultSet rs=ps.executeQuery(); 
+            if(rs.next()){
+                String name=rs.getNString(1);
+                int grade=rs.getInt(2);
+                String comment=rs.getNString(3);
+                String date=rs.getNString(4);
+                String with=rs.getNString(5);
+                String score=rs.getNString(6);
+                return new ChooseDataSong(fname,name,grade,comment,date,with,score);
+            }
+        }catch(SQLException e){
+            System.out.println(e);
+        }
+        return null;
     }
     
     
     public static int getSongNumber(String fname){
-        System.out.print("CDFL.getSongNumber"+ fname+":");
-        for(int i = 0;i<cdss.size();i++){
-            if(cdss.get(i).getFname().equals(fname)){System.out.println(i);
-                return i;
+        try{
+            PreparedStatement ps=conn.prepareCall(
+                "select id from songs where file="+fname
+            );
+            ResultSet rs=ps.executeQuery(); 
+            if(rs.next()){
+                int id=rs.getInt(1);
+                return id;
             }
+        }catch(SQLException e){
+            System.out.println(e);
         }
-        System.out.println("-1");
         return -1;
     }
     

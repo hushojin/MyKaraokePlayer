@@ -166,7 +166,7 @@ CDFLibrary.getCDSs()[]
                          a[i] = CDFLibrary.getSongNumber(lsL.getItem(i));
                      }
                      CDFLibrary.addNewPlayListData(tfn.getText(),a);
-                     CDFLibrary.reload(false);
+                     CDFLibrary.reload();
                      setVisible(false);
                  }
              }

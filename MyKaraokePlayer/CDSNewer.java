@@ -101,7 +101,6 @@ public class CDSNewer extends Dialog{
             new ActionListener(){
                 public void actionPerformed(ActionEvent e){
                     CDFLibrary.addNewSongData(fname.getText(),name.getText(),Integer.valueOf(grade.getText()),comment.getText(),date.getText(),with.getText(),score.getText());
-                    CDFLibrary.reload(true);
                     setVisible(false);
                 }
             }

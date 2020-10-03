@@ -172,7 +172,7 @@ CDFLibrary.getCDSs()[]
                          a[i] = CDFLibrary.getSongNumber(lsL.getItem(i));
                      }
                      CDFLibrary.playListEdit(CDFLibrary.getPlayListNumber(defaultName),new ChooseDataList(tfn.getText(),a));
-                     CDFLibrary.reload(false);
+                     CDFLibrary.reload();
                      setVisible(false);
                  }
              }
