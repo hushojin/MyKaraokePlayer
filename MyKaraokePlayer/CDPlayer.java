@@ -32,8 +32,8 @@ public class CDPlayer{
         }
         else{
             int number = 0;
-            mplay((CDFLibrary.getCDSs()[((ChooseDataList)cd).getSongs()[number]]).getFname());
-            gamen.setTitle((CDFLibrary.getCDSs()[((ChooseDataList)cd).getSongs()[number]]).getName()+" MyKarakePlayer");
+            mplay((CDFLibrary.getCDS(((ChooseDataList)cd).getSongs()[number])).getFname());
+            gamen.setTitle((CDFLibrary.getCDS(((ChooseDataList)cd).getSongs()[number])).getName()+" MyKarakePlayer");
         }
     }
     
@@ -188,8 +188,8 @@ public class CDPlayer{
         if( !cd.isSong() && number+1 < ((ChooseDataList)cd).number() ){
             teishi();
             number++;
-            mplay((CDFLibrary.getCDSs()[((ChooseDataList)cd).getSongs()[number]]).getFname());
-            gamen.setTitle((CDFLibrary.getCDSs()[((ChooseDataList)cd).getSongs()[number]]).getName()+" MyKarakePlayer");
+            mplay((CDFLibrary.getCDS(((ChooseDataList)cd).getSongs()[number])).getFname());
+            gamen.setTitle((CDFLibrary.getCDS(((ChooseDataList)cd).getSongs()[number])).getName()+" MyKarakePlayer");
             return true;
         }
         else{
@@ -200,8 +200,8 @@ public class CDPlayer{
         if( !cd.isSong() && number >= 1 ){
             teishi();
             number--;
-            mplay((CDFLibrary.getCDSs()[((ChooseDataList)cd).getSongs()[number]]).getFname());
-            gamen.setTitle((CDFLibrary.getCDSs()[((ChooseDataList)cd).getSongs()[number]]).getName()+" MyKarakePlayer");
+            mplay((CDFLibrary.getCDS(((ChooseDataList)cd).getSongs()[number])).getFname());
+            gamen.setTitle((CDFLibrary.getCDS(((ChooseDataList)cd).getSongs()[number])).getName()+" MyKarakePlayer");
             return true;
         }
         else{

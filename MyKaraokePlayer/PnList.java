@@ -129,13 +129,13 @@ public class PnList extends Panel{
                     new MouseAdapter(){
                         public void mouseReleased(MouseEvent e){
                             if(e.getButton()==MouseEvent.BUTTON3&&lss.getSelectedIndex()!=-1){
-                                popupInfoS(MouseInfo.getPointerInfo().getLocation(),CDFLibrary.getCDSs()[CDFLibrary.getSongNumber(lss.getSelectedItem())]);
+                                popupInfoS(MouseInfo.getPointerInfo().getLocation(),CDFLibrary.getCDS(CDFLibrary.getSongNumber(lss.getSelectedItem())));
                             }
                         }
                     }
                 );
                 for(int i:((ChooseDataList)cd).getSongs()){
-                    lss.add(CDFLibrary.getCDSs()[i].getFname());
+                    lss.add(CDFLibrary.getCDS(i).getFname());
                 }
                 Button btEdit = new Button("ï“èW");
                 btEdit.addActionListener(

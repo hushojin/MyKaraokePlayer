@@ -63,7 +63,7 @@ public class CDLEditor extends Dialog{
         
         add(lsL);
          for(int cds:cdl.getSongs()){
-             lsL.add(CDFLibrary.getCDSs()[cds].getFname());
+             lsL.add(CDFLibrary.getCDS(cds).getFname());
          }
          lsL.addItemListener(
              new ItemListener(){
@@ -81,7 +81,7 @@ public class CDLEditor extends Dialog{
              new MouseAdapter(){
                  public void mouseReleased(MouseEvent e){
                      if(e.getButton()==MouseEvent.BUTTON3&&lsL.getSelectedIndex()!=-1){
-                         popupInfo(MouseInfo.getPointerInfo().getLocation(),CDFLibrary.getCDSs()[CDFLibrary.getSongNumber(lsL.getSelectedItem())]);
+                         popupInfo(MouseInfo.getPointerInfo().getLocation(),CDFLibrary.getCDS(CDFLibrary.getSongNumber(lsL.getSelectedItem())));
 /*
 CDFLibrary.getCDSs()[]
               [CDFLibrary.getSongNumber()]
@@ -132,8 +132,8 @@ CDFLibrary.getCDSs()[CDFLibrary.getSongNumber(lsL.getSelectedItem())];
          btA.setBounds(155,110,70,20);
         
         add(lsS);
-         for(ChooseDataSong cds:CDFLibrary.getCDSs()){
-             lsS.add(cds.getFname());
+         for(String fname:CDFLibrary.getFNames()){
+             lsS.add(fname);
          }
          lsS.addItemListener(
              new ItemListener(){
@@ -151,7 +151,7 @@ CDFLibrary.getCDSs()[CDFLibrary.getSongNumber(lsL.getSelectedItem())];
              new MouseAdapter(){
                  public void mouseReleased(MouseEvent e){
                      if(e.getButton()==MouseEvent.BUTTON3&&lsS.getSelectedIndex()!=-1){
-                         popupInfo(MouseInfo.getPointerInfo().getLocation(),CDFLibrary.getCDSs()[lsS.getSelectedIndex()]);
+                         popupInfo(MouseInfo.getPointerInfo().getLocation(),CDFLibrary.getCDS(lsS.getSelectedIndex()));
 /*
 CDFLibrary.getCDSs()[]
               [lsS.get];

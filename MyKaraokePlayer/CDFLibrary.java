@@ -408,15 +408,18 @@ public class CDFLibrary{
     
     
     
-    public static ChooseDataSong[] getCDSs(){
-        ChooseDataSong[] a = new ChooseDataSong[0];
-        return cdss.toArray(a);
+    public static String[] getFNames(){
+        List<String> fns=new ArrayList<>();
+        for(ChooseDataSong cds:cdss){
+            fns.add(cds.getFname());
+        }
+        String[] a=new String[0];
+        return fns.toArray(a);
+    }
+    public static ChooseDataSong getCDS(int i){
+        return cdss.get(i);
     }
     
-    public static ChooseDataList[] getCDLs(){
-        ChooseDataList[] a = new ChooseDataList[0];
-        return cdls.toArray(a);
-    }
     
     public static int getSongNumber(String fname){
         System.out.print("CDFL.getSongNumber"+ fname+":");
