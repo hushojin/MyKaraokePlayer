@@ -2,20 +2,20 @@ import java.io.*;
 import java.util.*;
 
 public class CDFLibrary{
-    List<ChooseDataSong> cdss;
-    List<ChooseDataList> cdls;
-    PnList pnl;
-    CDFLibrary(){
+    static List<ChooseDataSong> cdss;
+    static List<ChooseDataList> cdls;
+    static PnList pnl;
+    static{
         reload(true);
         reload(false);
     }
-    public void setPnList(PnList pnl){
-        this.pnl = pnl;
+    public static void setPnList(PnList pnl){
+        CDFLibrary.pnl = pnl;
         ChooseData[] a = new ChooseData[0];
         pnl.lupdate(cdss.toArray(a));
     }
     
-    public void update(String f,boolean isSong){
+    public static void update(String f,boolean isSong){
         if(isSong){
             ChooseData[] a = new ChooseData[0];
             pnl.lupdate(cdss.toArray(a));
@@ -39,7 +39,7 @@ public class CDFLibrary{
             pnl.lupdate(result.toArray(a));
         }
     }
-    public void reload(boolean isSong){
+    public static void reload(boolean isSong){
         System.out.println("CDFL.reload:isSong"+isSong);
         if(isSong){
             try(FileReader fr = new FileReader("C:\\Users\\Owner\\Desktop\\Karaokewavs\\S.MKP")){
@@ -61,7 +61,7 @@ public class CDFLibrary{
         }
     }
     
-    public void songEdit(ChooseDataSong cds){
+    public static void songEdit(ChooseDataSong cds){
         File s = new File("C:\\Users\\Owner\\Desktop\\Karaokewavs\\S.MKP");
         File tmps = new File("C:\\Users\\Owner\\Desktop\\Karaokewavs\\tmpS.MKP");
         int target = getSongNumber(cds.getFname());
@@ -138,7 +138,7 @@ public class CDFLibrary{
         reload(true);
     }
     
-    public void addNewSongData(String fname,String name,int grade,String comment,String date,String with,String score){
+    public static void addNewSongData(String fname,String name,int grade,String comment,String date,String with,String score){
         try (FileWriter fw = new FileWriter("C:\\Users\\Owner\\Desktop\\Karaokewavs\\S.MKP",true)){
             
             fw.write(10);
@@ -165,7 +165,7 @@ public class CDFLibrary{
         reload(true);
     }
     
-    public void addNewPlayListData(String name,int[] cdss){
+    public static void addNewPlayListData(String name,int[] cdss){
         try (FileWriter fw = new FileWriter("C:\\Users\\Owner\\Desktop\\Karaokewavs\\L.MKP",true)){
             
             fw.write(10);
@@ -184,7 +184,7 @@ public class CDFLibrary{
         reload(false);
     }
     
-    public void playListDelete(int target){
+    public static void playListDelete(int target){
         System.out.println("CDFL.PLDelete:target"+target);
         File l = new File("C:\\Users\\Owner\\Desktop\\Karaokewavs\\L.MKP");
         File tmpl = new File("C:\\Users\\Owner\\Desktop\\Karaokewavs\\tmpL.MKP");
@@ -247,7 +247,7 @@ public class CDFLibrary{
         
     }
     
-    public void playListEdit(int target,ChooseDataList cdl){
+    public static void playListEdit(int target,ChooseDataList cdl){
         System.out.println("CDFL.PLEdit:target"+target);
         File l = new File("C:\\Users\\Owner\\Desktop\\Karaokewavs\\L.MKP");
         File tmpl = new File("C:\\Users\\Owner\\Desktop\\Karaokewavs\\tmpL.MKP");
@@ -322,7 +322,7 @@ public class CDFLibrary{
         
     }
     
-    private List<ChooseDataSong> sFileRead(FileReader fr){
+    private static List<ChooseDataSong> sFileRead(FileReader fr){
         List<ChooseDataSong> reads = new ArrayList<ChooseDataSong>(0);
         int d;
         String fname;
@@ -373,7 +373,7 @@ public class CDFLibrary{
         return reads;
     }
     
-    private List<ChooseDataList> lFileRead(FileReader fr){
+    private static List<ChooseDataList> lFileRead(FileReader fr){
         List<ChooseDataList> reads = new ArrayList<ChooseDataList>(0);
         int d;
         try{
@@ -403,22 +403,22 @@ public class CDFLibrary{
         }
         
         return reads;
-    } 
+    }
     
     
     
     
-    public ChooseDataSong[] getCDSs(){
+    public static ChooseDataSong[] getCDSs(){
         ChooseDataSong[] a = new ChooseDataSong[0];
         return cdss.toArray(a);
     }
     
-    public ChooseDataList[] getCDLs(){
+    public static ChooseDataList[] getCDLs(){
         ChooseDataList[] a = new ChooseDataList[0];
         return cdls.toArray(a);
     }
     
-    public int getSongNumber(String fname){
+    public static int getSongNumber(String fname){
         System.out.print("CDFL.getSongNumber"+ fname+":");
         for(int i = 0;i<cdss.size();i++){
             if(cdss.get(i).getFname().equals(fname)){System.out.println(i);
@@ -429,7 +429,7 @@ public class CDFLibrary{
         return -1;
     }
     
-    public int getPlayListNumber(String lname){
+    public static int getPlayListNumber(String lname){
         System.out.print("CDFL.getPlayListNumber"+ lname+":");
         for(int i = 0;i<cdls.size();i++){
             if(cdls.get(i).getName().equals(lname)){System.out.println(i);

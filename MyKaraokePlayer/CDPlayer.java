@@ -5,7 +5,6 @@ import javax.swing.*;
 import javax.sound.sampled.*;
 
 public class CDPlayer{
-    CDFLibrary cdfl;
     Gamen gamen;
     PnPlayer pnp;
     ChooseData cd = null;
@@ -15,8 +14,7 @@ public class CDPlayer{
     Clip clip;
     int number;//再生中のCDSがCDLの配列のどのインデックスの奴かを指す。0～CDL.number()-1
     
-    CDPlayer(CDFLibrary cdfl){
-        this.cdfl = cdfl;
+    CDPlayer(){
     }
     void setGamen(Gamen gamen){
         this.gamen = gamen;
@@ -34,8 +32,8 @@ public class CDPlayer{
         }
         else{
             int number = 0;
-            mplay((cdfl.getCDSs()[((ChooseDataList)cd).getSongs()[number]]).getFname());
-            gamen.setTitle((cdfl.getCDSs()[((ChooseDataList)cd).getSongs()[number]]).getName()+" MyKarakePlayer");
+            mplay((CDFLibrary.getCDSs()[((ChooseDataList)cd).getSongs()[number]]).getFname());
+            gamen.setTitle((CDFLibrary.getCDSs()[((ChooseDataList)cd).getSongs()[number]]).getName()+" MyKarakePlayer");
         }
     }
     
@@ -190,8 +188,8 @@ public class CDPlayer{
         if( !cd.isSong() && number+1 < ((ChooseDataList)cd).number() ){
             teishi();
             number++;
-            mplay((cdfl.getCDSs()[((ChooseDataList)cd).getSongs()[number]]).getFname());
-            gamen.setTitle((cdfl.getCDSs()[((ChooseDataList)cd).getSongs()[number]]).getName()+" MyKarakePlayer");
+            mplay((CDFLibrary.getCDSs()[((ChooseDataList)cd).getSongs()[number]]).getFname());
+            gamen.setTitle((CDFLibrary.getCDSs()[((ChooseDataList)cd).getSongs()[number]]).getName()+" MyKarakePlayer");
             return true;
         }
         else{
@@ -202,8 +200,8 @@ public class CDPlayer{
         if( !cd.isSong() && number >= 1 ){
             teishi();
             number--;
-            mplay((cdfl.getCDSs()[((ChooseDataList)cd).getSongs()[number]]).getFname());
-            gamen.setTitle((cdfl.getCDSs()[((ChooseDataList)cd).getSongs()[number]]).getName()+" MyKarakePlayer");
+            mplay((CDFLibrary.getCDSs()[((ChooseDataList)cd).getSongs()[number]]).getFname());
+            gamen.setTitle((CDFLibrary.getCDSs()[((ChooseDataList)cd).getSongs()[number]]).getName()+" MyKarakePlayer");
             return true;
         }
         else{

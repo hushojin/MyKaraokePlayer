@@ -4,7 +4,7 @@ import java.awt.event.*;
 
 public class CDSNewer extends Dialog{
     Dialog d=this;
-    CDSNewer(Gamen gamen,CDFLibrary cdfl){
+    CDSNewer(Gamen gamen){
         super(gamen,"曲新規作成",true);
         
         Label fnl = new Label("ファイル名:",Label.RIGHT);
@@ -54,7 +54,7 @@ public class CDSNewer extends Dialog{
                     fd.setVisible(true);
                     fname.setText(fd.getFile());
                     name.setText(fname.getText().substring(0,fname.getText().length()-4));
-                    if(cdfl.getSongNumber(fname.getText()) == -1){
+                    if(CDFLibrary.getSongNumber(fname.getText()) == -1){
                         finish.setEnabled(true);
                     }else{
                         finish.setEnabled(false);
@@ -100,8 +100,8 @@ public class CDSNewer extends Dialog{
         finish.addActionListener(
             new ActionListener(){
                 public void actionPerformed(ActionEvent e){
-                    cdfl.addNewSongData(fname.getText(),name.getText(),Integer.valueOf(grade.getText()),comment.getText(),date.getText(),with.getText(),score.getText());
-                    cdfl.reload(true);
+                    CDFLibrary.addNewSongData(fname.getText(),name.getText(),Integer.valueOf(grade.getText()),comment.getText(),date.getText(),with.getText(),score.getText());
+                    CDFLibrary.reload(true);
                     setVisible(false);
                 }
             }

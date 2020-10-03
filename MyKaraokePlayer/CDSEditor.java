@@ -4,7 +4,7 @@ import java.awt.event.*;
 
 public class CDSEditor extends Dialog{
     Dialog d=this;
-    CDSEditor(Gamen gamen,ChooseDataSong cds,CDFLibrary cdfl){
+    CDSEditor(Gamen gamen,ChooseDataSong cds){
         super(gamen,"曲編集",true);
         
         Label fnl = new Label("ファイル名:",Label.RIGHT);
@@ -80,7 +80,7 @@ public class CDSEditor extends Dialog{
         finish.addActionListener(
             new ActionListener(){
                 public void actionPerformed(ActionEvent e){
-                    cdfl.songEdit(new ChooseDataSong(fname.getText(),name.getText(),Integer.valueOf(grade.getText()),comment.getText(),date.getText(),with.getText(),score.getText()));
+                    CDFLibrary.songEdit(new ChooseDataSong(fname.getText(),name.getText(),Integer.valueOf(grade.getText()),comment.getText(),date.getText(),with.getText(),score.getText()));
                     setVisible(false);
                 }
             }
