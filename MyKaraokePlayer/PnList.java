@@ -67,6 +67,7 @@ public class PnList extends Panel{
     }
     
     void popupInfoS(Point p,ChooseDataSong cds){
+System.out.println("PnList:popupInfoS "+cds);
         System.out.println(cds.getName());
         pSHide();
         piS = new PopInfo(p,cds);
@@ -129,7 +130,8 @@ public class PnList extends Panel{
                     new MouseAdapter(){
                         public void mouseReleased(MouseEvent e){
                             if(e.getButton()==MouseEvent.BUTTON3&&lss.getSelectedIndex()!=-1){
-                                popupInfoS(MouseInfo.getPointerInfo().getLocation(),CDFLibrary.getCDS(CDFLibrary.getSongNumber(lss.getSelectedItem())));
+////////                                popupInfoS(MouseInfo.getPointerInfo().getLocation(),CDFLibrary.getCDS(CDFLibrary.getSongNumber(lss.getSelectedItem())));
+                                popupInfoS(MouseInfo.getPointerInfo().getLocation(),CDFLibrary.getCDS(lss.getSelectedItem()));
                             }
                         }
                     }
@@ -155,7 +157,7 @@ public class PnList extends Panel{
                             pHide();
                             pSHide();
                             System.out.println("PnInfo(List).btDelete.ActionListener:");
-                            CDFLibrary.playListDelete(CDFLibrary.getPlayListNumber(cd.getName()));
+                            CDFLibrary.playListDelete(cd.getName());
                         }
                     }
                 );

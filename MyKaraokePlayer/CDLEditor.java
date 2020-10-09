@@ -151,11 +151,10 @@ CDFLibrary.getCDSs()[CDFLibrary.getSongNumber(lsL.getSelectedItem())];
              new MouseAdapter(){
                  public void mouseReleased(MouseEvent e){
                      if(e.getButton()==MouseEvent.BUTTON3&&lsS.getSelectedIndex()!=-1){
-                         popupInfo(MouseInfo.getPointerInfo().getLocation(),CDFLibrary.getCDS(lsS.getSelectedIndex()));
-/*
-CDFLibrary.getCDSs()[]
-              [lsS.get];
-*/
+                         popupInfo(
+                             MouseInfo.getPointerInfo().getLocation(),
+                             CDFLibrary.getCDS(lsS.getSelectedItem())
+                         );
                      }
                  }
              }
@@ -171,8 +170,7 @@ CDFLibrary.getCDSs()[]
                      for(int i=0;i<lsL.getItemCount();i++){
                          a[i] = CDFLibrary.getSongNumber(lsL.getItem(i));
                      }
-                     CDFLibrary.playListEdit(CDFLibrary.getPlayListNumber(defaultName),new ChooseDataList(tfn.getText(),a));
-                     CDFLibrary.reload();
+                     CDFLibrary.playListEdit(defaultName,new ChooseDataList(tfn.getText(),a));
                      setVisible(false);
                  }
              }

@@ -76,16 +76,12 @@ public class CDLNewer extends Dialog{
              new MouseAdapter(){
                  public void mouseReleased(MouseEvent e){
                      if(e.getButton()==MouseEvent.BUTTON3&&lsL.getSelectedIndex()!=-1){
-                         popupInfo(MouseInfo.getPointerInfo().getLocation(),CDFLibrary.getCDS(CDFLibrary.getSongNumber(lsL.getSelectedItem())));
-/*
-CDFLibrary.getCDSs()[]
-              [CDFLibrary.getSongNumber()]
-                                 (lsL.getSelectedItem())
-
-;
-
-CDFLibrary.getCDSs()[CDFLibrary.getSongNumber(lsL.getSelectedItem())];
-*/
+                         popupInfo(
+                             MouseInfo.getPointerInfo().getLocation(),
+                             CDFLibrary.getCDS(
+                                 lsL.getSelectedItem()
+                             )
+                         );
                      }
                  }
              }
@@ -145,11 +141,10 @@ CDFLibrary.getCDSs()[CDFLibrary.getSongNumber(lsL.getSelectedItem())];
              new MouseAdapter(){
                  public void mouseReleased(MouseEvent e){
                      if(e.getButton()==MouseEvent.BUTTON3&&lsS.getSelectedIndex()!=-1){
-                         popupInfo(MouseInfo.getPointerInfo().getLocation(),CDFLibrary.getCDS(lsS.getSelectedIndex()));
-/*
-CDFLibrary.getCDSs()[]
-              [lsS.get];
-*/
+                         popupInfo(
+                             MouseInfo.getPointerInfo().getLocation(),
+                             CDFLibrary.getCDS(lsS.getSelectedItem())
+                         );
                      }
                  }
              }
@@ -166,7 +161,6 @@ CDFLibrary.getCDSs()[]
                          a[i] = CDFLibrary.getSongNumber(lsL.getItem(i));
                      }
                      CDFLibrary.addNewPlayListData(tfn.getText(),a);
-                     CDFLibrary.reload();
                      setVisible(false);
                  }
              }
