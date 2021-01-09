@@ -52,11 +52,7 @@ public class PnList extends Panel{
         update(tf,cbg.isSong());
     }
     void update(String tf,boolean isSong){
-        CDFLibrary.update(tf,isSong);
-    }
-    
-    void lupdate(ChooseData cda[]){
-        lsl.lupdate(cda);
+        CDFLibrary.update(lsl,tf,isSong);
     }
     
     void popupInfo(Point p,ChooseData cd){

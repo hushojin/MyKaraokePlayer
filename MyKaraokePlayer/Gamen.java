@@ -51,8 +51,4 @@ public class Gamen extends Frame {
          pnList.haichi();
     }
     
-    public void paint(Graphics g) {
-        
-    }
-    
 }

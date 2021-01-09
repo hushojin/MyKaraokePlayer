@@ -4,29 +4,20 @@ import java.util.*;
 
 public class CDFLibrary{
     static Connection conn;
-    static PnList pnl;
     static{
         try{
-/********************************************************************************************
-            String url="jdbc:mysql://localhost/mykaraokeplayerdb?useUnicode=true&useJDBCCompliantTimezoneShift=true&serverTimezone=UTC";
-********************************************************************************************/
             String url="jdbc:mysql://localhost/mkpdb?useUnicode=true&useJDBCCompliantTimezoneShift=true&serverTimezone=UTC";
             String user="mkp";
             String pass="pass";
             conn=DriverManager.getConnection(url,user,pass);
         }catch(SQLException e){e.printStackTrace();}
     }
-    public static void setPnList(PnList pnl){
-        CDFLibrary.pnl = pnl;
-        ChooseData[] a = new ChooseData[0];
-        pnl.lupdate(getCDSs());
-    }
     
-    public static void update(String f,boolean isSong){
+    public static void update(LsList lsl,String f,boolean isSong){
         if(isSong){
-            pnl.lupdate(getMatchCDSs(f));
+            lsl.lupdate(getMatchCDSs(f));
         }else{
-            pnl.lupdate(getMatchCDLs(f));
+            lsl.lupdate(getMatchCDLs(f));
         }
     }
     
