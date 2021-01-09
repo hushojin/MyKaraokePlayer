@@ -7,7 +7,7 @@ public class MB extends MenuBar {
     MenuItem miNewSong = new MenuItem("曲(S)",new MenuShortcut(KeyEvent.VK_S, true));
     MenuItem miNewList = new MenuItem("プレイリスト(L)",new MenuShortcut(KeyEvent.VK_L, true));
     
-    MB(CDPlayer cdp,Gamen parent){
+    MB(Gamen parent){
         this.parent = parent;
         add(mnNew);
          mnNew.add(miNewSong);

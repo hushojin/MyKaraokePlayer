@@ -5,7 +5,6 @@ import javax.swing.*;
 
 public class PnList extends Panel{
     PnList pn = this;
-    CDPlayer cdp;
     Tf tf = new Tf(this);
     Panel pnSwitch = new Panel(null);
     CBG cbg = new CBG(this);
@@ -13,10 +12,9 @@ public class PnList extends Panel{
     PopInfo pi;
     PopInfo piS;
     
-    PnList(CDPlayer cdp){
+    PnList(){
         setLayout(null);
-        lsl = new LsList(cdp);
-        this.cdp = cdp;
+        lsl = new LsList();
         setBackground(Color.black);
          add(tf);
          add(pnSwitch);pnSwitch.setBackground(Color.gray);

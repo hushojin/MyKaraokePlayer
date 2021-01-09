@@ -5,27 +5,25 @@ import javax.swing.*;
 import javax.sound.sampled.*;
 
 public class CDPlayer{
-    Gamen gamen;
-    PnPlayer pnp;
-    ChooseData cd = null;
-    AudioInputStream ais;
-    AudioInputStream dais;
-    AudioFormat af;
-    Clip clip;
-    int number;//再生中のCDSがCDLの配列のどのインデックスの奴かを指す。0～CDL.number()-1
+    static Gamen gamen;
+    static PnPlayer pnp;
+    static ChooseData cd = null;
+    static AudioInputStream ais;
+    static AudioInputStream dais;
+    static AudioFormat af;
+    static Clip clip;
+    static int number;//再生中のCDSがCDLの配列のどのインデックスの奴かを指す。0～CDL.number()-1
     
-    CDPlayer(){
+    static void setGamen(Gamen gamen){
+        CDPlayer.gamen = gamen;
     }
-    void setGamen(Gamen gamen){
-        this.gamen = gamen;
-    }
-    void setPnPlayer(PnPlayer pnp){
-        this.pnp = pnp;
+    static void setPnPlayer(PnPlayer pnp){
+        CDPlayer.pnp = pnp;
     }
     
-    void set(ChooseData cd){
+    static void set(ChooseData cd){
         teishi();
-        this.cd = cd;
+        CDPlayer.cd = cd;
         if(cd.isSong()){
             mplay(((ChooseDataSong)cd).getFname());
             gamen.setTitle(cd.getName()+" MyKarakePlayer");
@@ -37,7 +35,7 @@ public class CDPlayer{
         }
     }
     
-    void teishi(){
+    static void teishi(){
         if(clip != null && clip.isOpen()){
             try {
                 clip.stop();
@@ -89,7 +87,7 @@ public class CDPlayer{
         }
     }
 
-    void mplay(String fname){
+    static void mplay(String fname){
         try {
             AudioInputStream ais = AudioSystem.getAudioInputStream(new File("C:/\\Users\\Owner\\Desktop\\Karaokewavs\\",fname));
             AudioFormat baseFormat = ais.getFormat();
@@ -105,7 +103,7 @@ public class CDPlayer{
             System.out.println(e);
         }
     }
-    private void rawplayclip(AudioFormat targetFormat, AudioInputStream din) throws IOException,LineUnavailableException{
+    static private void rawplayclip(AudioFormat targetFormat, AudioInputStream din) throws IOException,LineUnavailableException{
         try {
             DataLine.Info info = new DataLine.Info(Clip.class, targetFormat);
             for(AudioFormat af:info.getFormats()){
@@ -157,34 +155,34 @@ public class CDPlayer{
         }
     }
     
-    long getFrameLength(){
+    static long getFrameLength(){
         return clip.getFramePosition();
     }
-    long getMicrosecondLength(){
+    static long getMicrosecondLength(){
         return clip.getMicrosecondPosition();
     }
-    long getFramePosition(){
+    static long getFramePosition(){
         return clip.getFramePosition();
     }
-    void setFramePosition(int frame){
+    static void setFramePosition(int frame){
         clip.setFramePosition(frame);
     }
-    long getMicrosecondPosition(){
+    static long getMicrosecondPosition(){
         return clip.getMicrosecondPosition();
     }
-    void setMicrosecondPosition(long frame){
+    static void setMicrosecondPosition(long frame){
         clip.setMicrosecondPosition(frame);
     }
-    boolean isRunning(){
+    static boolean isRunning(){
         return clip.isRunning();
     }
-    void start(){
+    static void start(){
         clip.start();
     }
-    void stop(){
+    static void stop(){
         clip.stop();
     }
-    boolean next(){//次があるかどうかはここが確かめる リストかどうかも判断しろ
+    static boolean next(){//次があるかどうかはここが確かめる リストかどうかも判断しろ
         if( !cd.isSong() && number+1 < ((ChooseDataList)cd).number() ){
             teishi();
             number++;
@@ -196,7 +194,7 @@ public class CDPlayer{
             return false;
         }
     }
-    boolean prev(){//前があるかどうかはここが確かめる リストかどうかも
+    static boolean prev(){//前があるかどうかはここが確かめる リストかどうかも
         if( !cd.isSong() && number >= 1 ){
             teishi();
             number--;
@@ -208,11 +206,8 @@ public class CDPlayer{
             return false;
         }
     }
-    void volume(){
-        //死
-    }
     
-    void endplay(){
+    static void endplay(){
         if(cd.isSong()){
             clip.setFramePosition(0);
         }

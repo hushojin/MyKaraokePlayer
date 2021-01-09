@@ -7,8 +7,9 @@ public class Gamen extends Frame {
     PnList pnList;
     PnPlayer pnPlayer;
     
-    Gamen(PnList pnlist,PnPlayer pnplayer) {
-        pnList = pnlist;
+    Gamen(PnPlayer pnplayer) {
+        pnList = new PnList();
+        pnList.update("",true);
         pnPlayer = pnplayer;
 
         setLayout(null);

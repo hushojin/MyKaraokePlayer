@@ -4,7 +4,6 @@ import java.io.*;
 
 public class PnPlayer extends Panel implements Runnable{
     PnPlayer pnp = this;
-    CDPlayer cdp;
     Button btPlay = new Button("||");
     SB sb = new SB(this);
     TD td = new TD(this);
@@ -15,7 +14,7 @@ public class PnPlayer extends Panel implements Runnable{
     int maxMicro;
     int valueMicro;
     
-    PnPlayer(CDPlayer cdp){
+    PnPlayer(){
         maxFrame = 1;
         setLayout(null);
 //        setFocusable(true);
@@ -26,18 +25,17 @@ public class PnPlayer extends Panel implements Runnable{
                 }
             }
         );
-        this.cdp = cdp;
         
         add(btPlay);
         btPlay.setEnabled(false);
         btPlay.addActionListener(
             new ActionListener(){
                 public void actionPerformed(ActionEvent e){
-                    if(cdp.isRunning()){
-                        cdp.stop();
+                    if(CDPlayer.isRunning()){
+                        CDPlayer.stop();
                     }
                     else{
-                        cdp.start();
+                        CDPlayer.start();
                     }
                 }
             }
@@ -59,13 +57,13 @@ public class PnPlayer extends Panel implements Runnable{
         btPrev.addActionListener(
             new ActionListener(){
                 public void actionPerformed(ActionEvent e){
-                    if(cdp.getMicrosecondPosition()<2000000){
-                        if(!cdp.prev()){
-                            cdp.setFramePosition(0);
+                    if(CDPlayer.getMicrosecondPosition()<2000000){
+                        if(!CDPlayer.prev()){
+                            CDPlayer.setFramePosition(0);
                         }
                     }
                     else{
-                        cdp.setFramePosition(0);
+                        CDPlayer.setFramePosition(0);
                     }
                     if(btPlay.isEnabled()){
                         btPlay.requestFocusInWindow();
@@ -78,7 +76,7 @@ public class PnPlayer extends Panel implements Runnable{
         btNext.addActionListener(
             new ActionListener(){
                 public void actionPerformed(ActionEvent e){
-                    cdp.next();
+                    CDPlayer.next();
                     if(btPlay.isEnabled()){
                         btPlay.requestFocusInWindow();
                     }
@@ -106,7 +104,7 @@ public class PnPlayer extends Panel implements Runnable{
     }
     
     void setFramePosition(int frame){
-        cdp.setFramePosition(frame);
+        CDPlayer.setFramePosition(frame);
     }
     
     public void setValue(int value){
@@ -118,7 +116,7 @@ public class PnPlayer extends Panel implements Runnable{
     
     void henka(int frameMax,int microMax){
         btPlay.setEnabled(true);
-        if(cdp.isRunning()){
+        if(CDPlayer.isRunning()){
             btPlay.setLabel("||");
             Thread trd = new Thread(this);
             trd.start();
@@ -134,14 +132,14 @@ public class PnPlayer extends Panel implements Runnable{
     
     public void ke(KeyEvent e){
         if(e.getKeyCode()==e.VK_LEFT){
-            cdp.setMicrosecondPosition(cdp.getMicrosecondPosition()-5000000);//外面
+            CDPlayer.setMicrosecondPosition(CDPlayer.getMicrosecondPosition()-5000000);//外面
             valueMicro = valueMicro>=5000000 ? valueMicro-5000000 : 0;
             valueFrame = (int)((double)maxFrame*valueMicro/maxMicro);
             sb.repaint();
             td.repaint();
         }
         if(e.getKeyCode()==e.VK_RIGHT){
-            cdp.setMicrosecondPosition(cdp.getMicrosecondPosition()+5000000);//外面
+            CDPlayer.setMicrosecondPosition(CDPlayer.getMicrosecondPosition()+5000000);//外面
             valueMicro = valueMicro+5000000<=maxMicro ? valueMicro+5000000 : maxMicro;
             valueFrame = (int)((double)maxFrame*valueMicro/maxMicro);
             sb.repaint();
@@ -149,24 +147,24 @@ public class PnPlayer extends Panel implements Runnable{
         }
         if(e.getKeyCode()==e.VK_SPACE){
             if(btPlay.isEnabled()){
-                if(cdp.isRunning()){
-                    cdp.stop();
+                if(CDPlayer.isRunning()){
+                    CDPlayer.stop();
                 }
                 else{
-                    cdp.start();
+                    CDPlayer.start();
                 }
             }
         }
     }
     
     public void run(){
-        while(cdp.isRunning()){
+        while(CDPlayer.isRunning()){
             try {                               // 例外処理
                 Thread.sleep(100);               // 100ミリ秒休眠
             } catch (InterruptedException e) {
             }
-            valueFrame = (int)cdp.getFramePosition();
-            valueMicro = (int)cdp.getMicrosecondPosition();
+            valueFrame = (int)CDPlayer.getFramePosition();
+            valueMicro = (int)CDPlayer.getMicrosecondPosition();
             sb.repaint();
             td.repaint();
         }

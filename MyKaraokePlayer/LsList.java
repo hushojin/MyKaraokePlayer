@@ -5,14 +5,12 @@ import javax.swing.*;
 
 public class LsList extends List{
     ChooseData cda[];
-    CDPlayer cdp;
     
-    LsList(CDPlayer cdp){
-        this.cdp = cdp;
+    LsList(){
         addActionListener(
             new ActionListener(){
                 public void actionPerformed(ActionEvent e){
-                    cdp.set(cda[getSelectedIndex()]);
+                    CDPlayer.set(cda[getSelectedIndex()]);
                     transferFocus();
                 }
             }
