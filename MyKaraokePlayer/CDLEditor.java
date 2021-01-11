@@ -4,9 +4,8 @@ import javax.swing.*;
 
 public class CDLEditor extends Dialog{
     PopInfoInCDLE pi;
-    CDLEditor cdle = this;
-    CDLEditor(Gamen gamen,ChooseDataList cdl){
-        super(gamen,"プレイリスト編集",true);
+    CDLEditor(ChooseDataList cdl){
+        super((Frame)null,"プレイリスト編集",true);
         String defaultName = cdl.getName();
         Label ln = new Label("名前:");
         TextField tfn = new TextField(defaultName);
@@ -82,15 +81,6 @@ public class CDLEditor extends Dialog{
                  public void mouseReleased(MouseEvent e){
                      if(e.getButton()==MouseEvent.BUTTON3&&lsL.getSelectedIndex()!=-1){
                          popupInfo(MouseInfo.getPointerInfo().getLocation(),CDFLibrary.getCDS(CDFLibrary.getSongNumber(lsL.getSelectedItem())));
-/*
-CDFLibrary.getCDSs()[]
-              [CDFLibrary.getSongNumber()]
-                                 (lsL.getSelectedItem())
-
-;
-
-CDFLibrary.getCDSs()[CDFLibrary.getSongNumber(lsL.getSelectedItem())];
-*/
                      }
                  }
              }
@@ -162,28 +152,28 @@ CDFLibrary.getCDSs()[CDFLibrary.getSongNumber(lsL.getSelectedItem())];
          lsS.setBounds(240,70,125,160);
         
         add(btS);
-         btS.addActionListener(
-             new ActionListener(){
-                 public void actionPerformed(ActionEvent e){
-                     System.out.println("CDLE.btS.actionListener");
-                     int a[] = new int[lsL.getItemCount()];
-                     for(int i=0;i<lsL.getItemCount();i++){
-                         a[i] = CDFLibrary.getSongNumber(lsL.getItem(i));
-                     }
-                     CDFLibrary.playListEdit(defaultName,new ChooseDataList(tfn.getText(),a));
-                     setVisible(false);
-                 }
-             }
-         );
-         btS.setBounds(210,250,70,20);
+        btS.addActionListener(
+            new ActionListener(){
+                public void actionPerformed(ActionEvent e){
+                    System.out.println("CDLE.btS.actionListener");
+                    int a[] = new int[lsL.getItemCount()];
+                    for(int i=0;i<lsL.getItemCount();i++){
+                        a[i] = CDFLibrary.getSongNumber(lsL.getItem(i));
+                    }
+                    CDFLibrary.playListEdit(defaultName,new ChooseDataList(tfn.getText(),a));
+                    setVisible(false);
+                }
+            }
+        );
+        btS.setBounds(210,250,70,20);
         
         add(btC);
-         btC.addActionListener(
-             new ActionListener(){
-                 public void actionPerformed(ActionEvent e){
-                     setVisible(false);
-                 }
-             }
+        btC.addActionListener(
+            new ActionListener(){
+                public void actionPerformed(ActionEvent e){
+                    setVisible(false);
+                }
+            }
          );
          btC.setBounds(290,250,70,20);
         
@@ -206,14 +196,13 @@ CDFLibrary.getCDSs()[CDFLibrary.getSongNumber(lsL.getSelectedItem())];
     
     class PopInfoInCDLE extends Popup{
         public PopInfoInCDLE(Point p,ChooseDataSong cd){
-            super(cdle,new PnInfoInCDLE(cd),(int)(p.getX()),(int)(p.getY()));
+            super(CDLEditor.this,new PnInfoInCDLE(cd),(int)(p.getX()),(int)(p.getY()));
         }
     }
     
     class PnInfoInCDLE extends Panel{
-        PnInfoInCDLE pni = this;
         PnInfoInCDLE(ChooseDataSong cds){
-            setLayout(new BoxLayout(pni,BoxLayout.Y_AXIS));
+            setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
             Label name = new Label(cds.getName());
             Label grade = new Label(String.valueOf(cds.getGrade()));
             Label comment = new Label(cds.getComment());

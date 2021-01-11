@@ -1,25 +1,28 @@
 import java.awt.*;
 import java.awt.event.*;
 
-public class TD extends Panel {
-    PnPlayer pnp;
+public class TD extends Panel implements PlayStateDisplay{
     Label label = new Label("0:00/0:00",Label.CENTER);
+    PlayState state;
     
-    TD(PnPlayer pnp){
+    TD(){
         setLayout(null);
-        this.pnp = pnp;
+        setBackground(Color.white);
         add(label);
         label.setBounds(1,3,65,23);
-        
     }
     
     public void paint(Graphics g){
-        label.setText(txgen(pnp.valueMicro,pnp.maxMicro));
+        if(state==null){
+          return;
+        }
+        label.setText(secToTime(state.microPosition/1000000)+"/"+secToTime(state.maxMicro/1000000));
     }
-    String txgen(int a,int b){
-        return a/60000000+":"+
-        (((a/1000000%60)<10)?"0":"")+a/1000000%60+"/"+
-        b/60000000+":"+
-        (((b/1000000%60)<10)?"0":"")+b/1000000%60;
+    String secToTime(long a){
+        return a/60+":"+(((a%60)<10)?"0":"")+a%60;
+    }
+    
+    public void setPlayState(PlayState state){
+        this.state=state;
     }
 }

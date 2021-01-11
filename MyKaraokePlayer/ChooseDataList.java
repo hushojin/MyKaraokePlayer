@@ -23,5 +23,5 @@ public class ChooseDataList extends ChooseData{
     int number(){
         return cdsl.length;
     }
-    Boolean isSong(){return false;}
+    boolean isSong(){return false;}
 }

@@ -43,5 +43,5 @@ public class ChooseDataSong extends ChooseData{
     String getScore(){
         return score;
     }
-    Boolean isSong(){return true;}
+    boolean isSong(){return true;}
 }

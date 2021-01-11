@@ -5,91 +5,70 @@ import javax.swing.*;
 import javax.sound.sampled.*;
 
 public class CDPlayer{
-    static Gamen gamen;
-    static PnPlayer pnp;
+    static String songFileDirectory="C:/\\Users\\Owner\\Desktop\\Karaokewavs\\";
+    static StringDisplay sDisp;
+    static PlayStateDisplay psDisp;
+    static Thread psdThr;
     static ChooseData cd = null;
     static AudioInputStream ais;
     static AudioInputStream dais;
     static AudioFormat af;
     static Clip clip;
+    static java.util.List<LineListener> listeners=new java.util.ArrayList<>();
     static int number;//再生中のCDSがCDLの配列のどのインデックスの奴かを指す。0～CDL.number()-1
     
-    static void setGamen(Gamen gamen){
-        CDPlayer.gamen = gamen;
+    public static void setStringDisplay(StringDisplay sDisp){
+        CDPlayer.sDisp = sDisp;
     }
-    static void setPnPlayer(PnPlayer pnp){
-        CDPlayer.pnp = pnp;
+    public static void setPlayStateDisplay(PlayStateDisplay psDisp){
+        CDPlayer.psDisp = psDisp;
     }
-    
-    static void set(ChooseData cd){
-        teishi();
+    private static void psDisplayUpdate(){
+        psDisp.setPlayState(
+            new PlayState(
+                clip.isRunning(),
+                clip.getFrameLength(),
+                clip.getFramePosition(),
+                clip.getMicrosecondLength(),
+                clip.getMicrosecondPosition()
+            )
+        );
+    }
+    public static void setCD(ChooseData cd){
+        stop();
         CDPlayer.cd = cd;
         if(cd.isSong()){
-            mplay(((ChooseDataSong)cd).getFname());
-            gamen.setTitle(cd.getName()+" MyKarakePlayer");
+            ChooseDataSong cds=(ChooseDataSong)cd;
+            mplay(cds.getFname());
+            sDisp.setString(cd.getName()+" MyKarakePlayer");
         }
         else{
-            int number = 0;
-            mplay((CDFLibrary.getCDS(((ChooseDataList)cd).getSongs()[number])).getFname());
-            gamen.setTitle((CDFLibrary.getCDS(((ChooseDataList)cd).getSongs()[number])).getName()+" MyKarakePlayer");
+            ChooseDataList cdl=(ChooseDataList)cd;
+            number = 0;
+            ChooseDataSong cds=CDFLibrary.getCDS(cdl.getSongs()[number]);
+            mplay(cds.getFname());
+            sDisp.setString((number+1)+"/"+cdl.number()+" "+cds.getName()+" MyKarakePlayer");
         }
     }
-    
-    static void teishi(){
-        if(clip != null && clip.isOpen()){
-            try {
+    private static void stop(){
+        if(clip!=null&&clip.isOpen()){
+            try{
                 clip.stop();
+                clip.close();
                 if(ais!=null){
                     ais.close();
                 }
-                System.out.println("CDP.teishi:aisNull"+(ais==null));
                 if(dais!=null){
                     dais.close();
                 }
-                System.out.println("CDP.teishi:daisNull"+(dais==null));
-            } catch (IOException e) {
+            }catch(IOException e){
                 e.printStackTrace();
             }
         }
     }
-    
-    void play(String fname){
-        
+    private static void mplay(String fname){
         try {
-            ais = AudioSystem.getAudioInputStream(new File("C:\\Users\\Owner\\Desktop\\Karaokewavs\\",fname));
-            af = ais.getFormat();
-            DataLine.Info info = new DataLine.Info(Clip.class, af);
-            clip = (Clip)AudioSystem.getLine(info);
-            clip.addLineListener(
-                new LineListener(){
-                    public void update(LineEvent e){
-                        pnp.henka((int)clip.getFrameLength(),(int)clip.getMicrosecondLength());
-                        if(clip.getFramePosition() >= clip.getFrameLength()){
-                            endplay();
-                        }
-                    }
-                }
-            );
-            clip.open(ais);
-            clip.loop(0);
-            clip.flush();
-            /*while(clip.isActive()) {
-                Thread.sleep(300);
-            }*/
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException /*| InterruptedException*/ e) {
-            e.printStackTrace();
-        }finally {
-            try {
-                ais.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    static void mplay(String fname){
-        try {
-            AudioInputStream ais = AudioSystem.getAudioInputStream(new File("C:/\\Users\\Owner\\Desktop\\Karaokewavs\\",fname));
+            AudioInputStream ais = AudioSystem.getAudioInputStream(new File(songFileDirectory,fname));
             AudioFormat baseFormat = ais.getFormat();
             AudioFormat decodedFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED,baseFormat.getSampleRate(),
                                                         16,baseFormat.getChannels(),
@@ -103,36 +82,33 @@ public class CDPlayer{
             System.out.println(e);
         }
     }
-    static private void rawplayclip(AudioFormat targetFormat, AudioInputStream din) throws IOException,LineUnavailableException{
+    private static void rawplayclip(AudioFormat targetFormat, AudioInputStream din) throws IOException,LineUnavailableException{
         try {
             DataLine.Info info = new DataLine.Info(Clip.class, targetFormat);
-            for(AudioFormat af:info.getFormats()){
-                System.out.println("CDP.rawplayclip "+af);
-            }
             clip = (Clip)AudioSystem.getLine(info);
-            /*
-            System.out.println(clip.isControlSupported(FloatControl.Type.VOLUME));
-            System.out.println(clip.isControlSupported(FloatControl.Type.SAMPLE_RATE));
-            System.out.println(clip.isControlSupported(FloatControl.Type.REVERB_SEND));
-            System.out.println(clip.isControlSupported(FloatControl.Type.REVERB_RETURN));
-            System.out.println(clip.isControlSupported(FloatControl.Type.PAN));
-            System.out.println(clip.isControlSupported(FloatControl.Type.MASTER_GAIN));
-            System.out.println(clip.isControlSupported(FloatControl.Type.BALANCE));
-            System.out.println(clip.isControlSupported(FloatControl.Type.AUX_SEND));
-            System.out.println(clip.isControlSupported(FloatControl.Type.AUX_RETURN));
-            //ctrl = (FloatControl)clip.getControl(FloatControl.Type.MASTER_GAIN);*/
-            System.out.println("\n===== コントロールズ =====");
-            javax.sound.sampled.Control[] ctrls = clip.getControls();
-            for(javax.sound.sampled.Control ctrl : ctrls) {
-                System.out.println(ctrl.toString());
-            }
             
             clip.addLineListener(
-                new LineListener(){
-                    public void update(LineEvent e){
-                        pnp.henka((int)clip.getFrameLength(),(int)clip.getMicrosecondLength());
-                        if(clip.getFramePosition() >= clip.getFrameLength()){
-                            endplay();
+                (e)->{
+                    if(e.getType()==LineEvent.Type.START){
+                        psdThr=new Thread(
+                            ()->{
+                                try{
+                                    while(clip.isRunning()){
+                                        psDisplayUpdate();
+                                        psdThr.sleep(100);
+                                    }
+                                }catch(InterruptedException ex){}
+                            }
+                        );
+                        psdThr.start();
+                    }else if(e.getType()==LineEvent.Type.STOP){
+                        psDisplayUpdate();
+                        if(clip.getFramePosition()>=clip.getFrameLength()){
+                            if(cd.isSong()){
+                                setFramePosition(0);
+                            }else{
+                                next();
+                            }
                         }
                     }
                 }
@@ -140,11 +116,7 @@ public class CDPlayer{
             
             clip.open(din);
             clip.loop(0);
-            clip.flush();
-            //while(clip.isActive()) {
-            //    Thread.sleep(100);
-            //}
-        } catch (/*UnsupportedAudioFileException | */IOException | LineUnavailableException /*| InterruptedException*/ e) {
+        } catch (IOException | LineUnavailableException e) {
             e.printStackTrace();
         }finally {
             try {
@@ -154,67 +126,39 @@ public class CDPlayer{
             }
         }
     }
+    public static void next(){
+        if( !cd.isSong() && number+1 < ((ChooseDataList)cd).number() ){
+            ChooseDataList cdl=(ChooseDataList)cd;
+            stop();
+            number++;
+            mplay(CDFLibrary.getCDS(cdl.getSongs()[number]).getFname());
+            sDisp.setString((number+1)+"/"+cdl.number()+" "+CDFLibrary.getCDS(cdl.getSongs()[number]).getName()+" MyKarakePlayer");
+        }
+    }
+    public static void prev(){
+        if(!cd.isSong() && 1<= number && clip.getMicrosecondPosition() < 2000000L){
+            ChooseDataList cdl=(ChooseDataList)cd;
+            stop();
+            number--;
+            mplay(CDFLibrary.getCDS(cdl.getSongs()[number]).getFname());
+            sDisp.setString((number+1)+"/"+cdl.number()+" "+CDFLibrary.getCDS(cdl.getSongs()[number]).getName()+" MyKarakePlayer");
+        }else{
+            CDPlayer.setFramePosition(0);
+        }
+    }
     
-    static long getFrameLength(){
-        return clip.getFramePosition();
-    }
-    static long getMicrosecondLength(){
-        return clip.getMicrosecondPosition();
-    }
-    static long getFramePosition(){
-        return clip.getFramePosition();
-    }
-    static void setFramePosition(int frame){
+    public static void setFramePosition(int frame){
         clip.setFramePosition(frame);
+        psDisplayUpdate();
     }
-    static long getMicrosecondPosition(){
-        return clip.getMicrosecondPosition();
+    public static void shiftSecond(int sec){
+        clip.setMicrosecondPosition(clip.getMicrosecondPosition()+1000000L*sec);
+        psDisplayUpdate();
     }
-    static void setMicrosecondPosition(long frame){
-        clip.setMicrosecondPosition(frame);
-    }
-    static boolean isRunning(){
-        return clip.isRunning();
-    }
-    static void start(){
+    public static void start(){
         clip.start();
     }
-    static void stop(){
+    public static void pause(){
         clip.stop();
-    }
-    static boolean next(){//次があるかどうかはここが確かめる リストかどうかも判断しろ
-        if( !cd.isSong() && number+1 < ((ChooseDataList)cd).number() ){
-            teishi();
-            number++;
-            mplay((CDFLibrary.getCDS(((ChooseDataList)cd).getSongs()[number])).getFname());
-            gamen.setTitle((CDFLibrary.getCDS(((ChooseDataList)cd).getSongs()[number])).getName()+" MyKarakePlayer");
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
-    static boolean prev(){//前があるかどうかはここが確かめる リストかどうかも
-        if( !cd.isSong() && number >= 1 ){
-            teishi();
-            number--;
-            mplay((CDFLibrary.getCDS(((ChooseDataList)cd).getSongs()[number])).getFname());
-            gamen.setTitle((CDFLibrary.getCDS(((ChooseDataList)cd).getSongs()[number])).getName()+" MyKarakePlayer");
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
-    
-    static void endplay(){
-        if(cd.isSong()){
-            clip.setFramePosition(0);
-        }
-        else{
-            if(next()){//次があるかどうかはネクストが確かめる
-                clip.setFramePosition(0);
-            }
-        }
     }
 }

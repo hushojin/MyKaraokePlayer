@@ -3,9 +3,8 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class CDSEditor extends Dialog{
-    Dialog d=this;
-    CDSEditor(Gamen gamen,ChooseDataSong cds){
-        super(gamen,"曲編集",true);
+    CDSEditor(ChooseDataSong cds){
+        super((Frame)null,"曲編集",true);
         
         Label fnl = new Label("ファイル名:",Label.RIGHT);
         Label fname = new Label(cds.getFname());

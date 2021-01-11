@@ -4,9 +4,8 @@ import javax.swing.*;
 
 public class CDLNewer extends Dialog{
     PopInfoInCDLN pi;
-    CDLNewer cdln = this;
-    CDLNewer(Gamen gamen){
-        super(gamen,"プレイリスト新規作成",true);
+    CDLNewer(){
+        super((Frame)null,"プレイリスト新規作成",true);
         Label ln = new Label("名前:");
         TextField tfn = new TextField();
         List lsL = new List();
@@ -196,14 +195,13 @@ public class CDLNewer extends Dialog{
     
     class PopInfoInCDLN extends Popup{
         public PopInfoInCDLN(Point p,ChooseDataSong cd){
-            super(cdln,new PnInfoInCDLN(cd),(int)(p.getX()),(int)(p.getY()));
+            super(CDLNewer.this,new PnInfoInCDLN(cd),(int)(p.getX()),(int)(p.getY()));
         }
     }
     
     class PnInfoInCDLN extends Panel{
-        PnInfoInCDLN pni = this;
         PnInfoInCDLN(ChooseDataSong cds){
-            setLayout(new BoxLayout(pni,BoxLayout.Y_AXIS));
+            setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
             Label name = new Label(cds.getName());
             Label grade = new Label(String.valueOf(cds.getGrade()));
             Label comment = new Label(cds.getComment());

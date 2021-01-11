@@ -13,14 +13,6 @@ public class CDFLibrary{
         }catch(SQLException e){e.printStackTrace();}
     }
     
-    public static void update(LsList lsl,String f,boolean isSong){
-        if(isSong){
-            lsl.lupdate(getMatchCDSs(f));
-        }else{
-            lsl.lupdate(getMatchCDLs(f));
-        }
-    }
-    
     public static void songEdit(ChooseDataSong cds){
         try{
             String sql="update songs set"+
@@ -94,7 +86,7 @@ public class CDFLibrary{
         playListDelete(oldName);
         addNewPlayListData(cdl.getName(),cdl.getSongs());
     }
-    private static ChooseDataSong[] getMatchCDSs(String s){
+    public static ChooseDataSong[] getMatchCDSs(String s){
         List<ChooseDataSong> cdss=new ArrayList<>();
         try{
             String sql="select file,title,eval,comm,date,comp,score from songs where title like '%"+s.replaceAll("%","\\%").replaceAll("_","[_]").replaceAll("'","''")+"%'";
@@ -116,7 +108,7 @@ public class CDFLibrary{
         }
         return cdss.toArray(new ChooseDataSong[0]);
     }
-    private static ChooseDataList[] getMatchCDLs(String s){
+    public static ChooseDataList[] getMatchCDLs(String s){
         List<ChooseDataList> cdls=new ArrayList<>();
         try{
             String sql="select list from lists where list like '%"+s.replaceAll("%","\\%").replaceAll("_","[_]").replaceAll("'","''")+"%'";

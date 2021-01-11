@@ -3,20 +3,21 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class Gamen extends Frame {
+public class Gamen extends Frame implements StringDisplay{
     PnList pnList;
     PnPlayer pnPlayer;
-    
-    Gamen(PnPlayer pnplayer) {
+    Gamen() {
         pnList = new PnList();
         pnList.update("",true);
-        pnPlayer = pnplayer;
+        pnPlayer = new PnPlayer();
 
         setLayout(null);
         setTitle("MyKaraokePlayer");
         setSize(400, 350);
-        setMinimumSize(new Dimension(0,99));
-        setVisible(true);
+        setMinimumSize(new Dimension(200,99));
+        setMenuBar(new MB());
+        add(pnList);
+        add(pnPlayer);
         addWindowListener(
             new WindowAdapter(){
                 public void windowClosing(WindowEvent e){
@@ -27,29 +28,26 @@ public class Gamen extends Frame {
         addComponentListener(
             new ComponentAdapter(){
                 public void componentResized(ComponentEvent e){
-                    haichi();
+                    selfLayout();
                 }
             }
         );
-        MenuBar m = new MenuBar();//無駄オブジェクト メニューバー分の幅を取ってもらう
-        m.add(new Menu());
-        setMenuBar(m);
-        add(pnList);
-        add(pnPlayer);pnPlayer.setBackground(Color.gray);
         try{
           setIconImage(javax.imageio.ImageIO.read(new File("MKPicon1.png")));
         }catch(IOException e){}
+        
+        CDPlayer.setStringDisplay(this);
+        setVisible(true);
     }
     
-    public void setMB(MB mb){
-        setMenuBar(mb);
-    }
-    
-    public void haichi(){
+    public void selfLayout(){
         pnPlayer.setBounds(0,getHeight()-getInsets().bottom-40,getWidth(),40);
-         pnPlayer.haichi();
+        pnPlayer.selfLayout();
         pnList.setBounds(0,getInsets().top,getWidth(),pnPlayer.getY()-getInsets().top);
-         pnList.haichi();
+        pnList.selfLayout();
     }
     
+    public void setString(String str){
+        setTitle(str);
+    }
 }
