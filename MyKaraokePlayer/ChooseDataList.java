@@ -1,6 +1,3 @@
-import java.io.*;
-import javax.swing.*;
-
 public class ChooseDataList extends ChooseData{
     String name;
     int cdsl[];
@@ -16,6 +13,7 @@ public class ChooseDataList extends ChooseData{
     int getSong(int index){
         return cdsl[index];
     }
+    
     int[] getSongs(){
         return cdsl;
     }

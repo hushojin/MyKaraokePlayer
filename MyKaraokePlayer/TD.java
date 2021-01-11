@@ -1,5 +1,4 @@
 import java.awt.*;
-import java.awt.event.*;
 
 public class TD extends Panel implements PlayStateDisplay{
     Label label = new Label("0:00/0:00",Label.CENTER);

@@ -1,6 +1,5 @@
 import java.awt.*;
 import java.awt.event.*;
-import java.io.*;
 
 public class PnPlayer extends Panel implements PlayStateDisplay{
     Button btPlay = new Button("||");

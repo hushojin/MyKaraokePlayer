@@ -1,11 +1,9 @@
-import java.io.*;
 import java.awt.*;
 import java.awt.event.*;
 
 public class CDSNewer extends Dialog{
-    Dialog d=this;
-    CDSNewer(Gamen gamen){
-        super(gamen,"曲新規作成",true);
+    CDSNewer(){
+        super((Frame)null,"曲新規作成",true);
         
         Label fnl = new Label("ファイル名:",Label.RIGHT);
         Label fname = new Label();
@@ -47,18 +45,16 @@ public class CDSNewer extends Dialog{
         add(ref);
         ref.setBounds(fname.getX()+fname.getWidth(),fname.getY(),20,20);
         ref.addActionListener(
-            new ActionListener(){
-                public void actionPerformed(ActionEvent e){
-                    FileDialog fd = new FileDialog(d,"ファイル選択",FileDialog.LOAD);
-                    fd.setDirectory("C:\\Users\\Owner\\Desktop\\Karaokewavs");
-                    fd.setVisible(true);
-                    fname.setText(fd.getFile());
-                    name.setText(fname.getText().substring(0,fname.getText().length()-4));
-                    if(CDFLibrary.getSongNumber(fname.getText()) == -1){
-                        finish.setEnabled(true);
-                    }else{
-                        finish.setEnabled(false);
-                    }
+            (e)->{
+                FileDialog fd = new FileDialog(CDSNewer.this,"ファイル選択",FileDialog.LOAD);
+                fd.setDirectory("C:\\Users\\Owner\\Desktop\\Karaokewavs");
+                fd.setVisible(true);
+                fname.setText(fd.getFile());
+                name.setText(fname.getText().substring(0,fname.getText().length()-4));
+                if(CDFLibrary.getSongNumber(fname.getText()) == -1){
+                    finish.setEnabled(true);
+                }else{
+                    finish.setEnabled(false);
                 }
             }
         );
@@ -97,23 +93,13 @@ public class CDSNewer extends Dialog{
         add(finish);
         finish.setBounds(150,250,70,20);
         finish.setEnabled(false);
-        finish.addActionListener(
-            new ActionListener(){
-                public void actionPerformed(ActionEvent e){
-                    CDFLibrary.addNewSongData(fname.getText(),name.getText(),Integer.valueOf(grade.getText()),comment.getText(),date.getText(),with.getText(),score.getText());
-                    setVisible(false);
-                }
-            }
-        );
+        finish.addActionListener((e)->{
+            CDFLibrary.addNewSongData(fname.getText(),name.getText(),Integer.valueOf(grade.getText()),comment.getText(),date.getText(),with.getText(),score.getText());
+            setVisible(false);
+        });
         add(cansell);
         cansell.setBounds(240,250,70,20);
-        cansell.addActionListener(
-            new ActionListener(){
-                public void actionPerformed(ActionEvent e){
-                    setVisible(false);
-                }
-            }
-        );
+        cansell.addActionListener((e)->setVisible(false));
         
         setSize(380,290);
         setResizable(false);
