@@ -3,17 +3,19 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class CDLNewer extends Dialog{
-    PopInfoInCDLN pi;
+    PopSongInfo popSong;
     CDLNewer(){
         super((Frame)null,"プレイリスト新規作成",true);
         Label ln = new Label("名前:");
         TextField tfn = new TextField();
-        List lsL = new List();
-        Button btR = new Button("削除>>");
-        Button btA = new Button("<<追加");
-        List lsS = new List();
-        Button btS = new Button("保存");
-        Button btC = new Button("キャンセル");
+        List listSongList = new List();
+        java.util.List<ChooseDataSong> listSongs=new java.util.ArrayList<>();
+        Button removeButton = new Button("削除>>");
+        Button addButton = new Button("<<追加");
+        List allSongList = new List();
+        ChooseDataSong[] allSongs=CDFLibrary.getMatchCDSs("");
+        Button saveButton = new Button("保存");
+        Button canselButton = new Button("キャンセル");
         
         addWindowListener(
             new WindowAdapter(){
@@ -26,155 +28,139 @@ public class CDLNewer extends Dialog{
         addMouseMotionListener(
             new MouseMotionListener(){
                 public void mouseDragged(MouseEvent e){
-                    if(pi!=null){
-                        pi.hide();
-                        pi=null;
+                    if(popSong!=null){
+                        popSong.hide();
+                        popSong=null;
                     }
                 }
                 public void mouseMoved(MouseEvent e){
-                    if(pi!=null){
-                        pi.hide();
-                        pi=null;
+                    if(popSong!=null){
+                        popSong.hide();
+                        popSong=null;
                     }
                 }
             }
         );
         
         add(ln);
-         ln.setBounds(20,40,30,20);
+        ln.setBounds(20,40,30,20);
         
         add(tfn);
-         tfn.addTextListener(
-             new TextListener(){
-                 public void textValueChanged(TextEvent e){
-                     if( tfn.getText().isEmpty() || lsL.getItemCount()==0 || CDFLibrary.getPlayListNumber(tfn.getText())!=-1 ){
-                         btS.setEnabled(false);
-                     }
-                     else{
-                         btS.setEnabled(true);
-                     }
-                 }
-             }
-         );
-         tfn.setBounds(50,40,95,20);
+        tfn.addTextListener(
+            new TextListener(){
+                public void textValueChanged(TextEvent e){
+                    if( tfn.getText().isEmpty() || listSongList.getItemCount()==0 || CDFLibrary.existsListName(tfn.getText()) ){
+                        saveButton.setEnabled(false);
+                    }else{
+                        saveButton.setEnabled(true);
+                    }
+                }
+            }
+        );
+        tfn.setBounds(50,40,95,20);
         
-        add(lsL);
-         lsL.addItemListener(
-             new ItemListener(){
-                 public void itemStateChanged(ItemEvent e){
-                     if(e.getStateChange()==ItemEvent.SELECTED){
-                         btR.setEnabled(true);
-                     }
-                     else if(e.getStateChange()==ItemEvent.DESELECTED){
-                         btR.setEnabled(false);
-                     }
-                 }
-             }
-         );
-         lsL.addMouseListener(
-             new MouseAdapter(){
-                 public void mouseReleased(MouseEvent e){
-                     if(e.getButton()==MouseEvent.BUTTON3&&lsL.getSelectedIndex()!=-1){
-                         popupInfo(
-                             MouseInfo.getPointerInfo().getLocation(),
-                             CDFLibrary.getCDS(
-                                 lsL.getSelectedItem()
-                             )
-                         );
-                     }
-                 }
-             }
-         );
-         lsL.setBounds(20,70,125,160);
+        add(listSongList);
+        listSongList.addItemListener(
+            new ItemListener(){
+                public void itemStateChanged(ItemEvent e){
+                    if(e.getStateChange()==ItemEvent.SELECTED){
+                        removeButton.setEnabled(true);
+                    }else if(e.getStateChange()==ItemEvent.DESELECTED){
+                        removeButton.setEnabled(false);
+                    }
+                }
+            }
+        );
+        listSongList.addMouseListener(
+            new MouseAdapter(){
+                public void mouseReleased(MouseEvent e){
+                    if(e.getButton()==MouseEvent.BUTTON3&&listSongList.getSelectedIndex()!=-1){
+                        popupInfo(
+                            MouseInfo.getPointerInfo().getLocation(),
+                            listSongs.get(listSongList.getSelectedIndex())
+                        );
+                    }
+                }
+            }
+        );
+        listSongList.setBounds(20,70,125,160);
         
-        add(btR);
-         btR.setEnabled(false);
-         btR.addActionListener(
-             new ActionListener(){
-                 public void actionPerformed(ActionEvent e){
-                     int t = lsL.getSelectedIndex();
-                     lsL.remove(t);
-                     if(lsL.getItemCount()==0){
-                         btR.setEnabled(false);
-                         btS.setEnabled(false);
-                     }
-                     else{
-                         lsL.select( t<lsL.getItemCount() ? t : t-1 );
-                     }
-                 }
-             }
-         );
-         btR.setBounds(155,70,70,20);
+        add(removeButton);
+        removeButton.setEnabled(false);
+        removeButton.addActionListener(
+            (e)->{
+                int index = listSongList.getSelectedIndex();
+                listSongList.remove(index);
+                listSongs.remove(index);
+                if(listSongList.getItemCount()==0){
+                    removeButton.setEnabled(false);
+                    saveButton.setEnabled(false);
+                }
+                else{
+                    listSongList.select( index<listSongList.getItemCount() ? index : index-1 );
+                }
+            }
+        );
+        removeButton.setBounds(155,70,70,20);
         
-        add(btA);
-         btA.setEnabled(false);
-         btA.addActionListener(
-             new ActionListener(){
-                 public void actionPerformed(ActionEvent e){
-                     lsL.add(lsS.getSelectedItem());
-                     if( !tfn.getText().isEmpty() && CDFLibrary.getPlayListNumber(tfn.getText())==-1){
-                         btS.setEnabled(true);
-                     }
-                 }
-             }
-         );
-         btA.setBounds(155,110,70,20);
+        add(addButton);
+        addButton.setEnabled(false);
+        addButton.addActionListener(
+            (e)->{
+                listSongList.add(allSongList.getSelectedItem());
+                listSongs.add(allSongs[allSongList.getSelectedIndex()]);
+                if( !tfn.getText().isEmpty() && !CDFLibrary.existsListName(tfn.getText())){
+                    saveButton.setEnabled(true);
+                }
+            }
+        );
+        addButton.setBounds(155,110,70,20);
         
-        add(lsS);
-         for(String fname:CDFLibrary.getFNames()){
-             lsS.add(fname);
-         }
-         lsS.addItemListener(
-             new ItemListener(){
-                 public void itemStateChanged(ItemEvent e){
-                     if(e.getStateChange()==ItemEvent.SELECTED){
-                         btA.setEnabled(true);
-                     }
-                     else if(e.getStateChange()==ItemEvent.DESELECTED){
-                         btA.setEnabled(false);
-                     }
-                 }
-             }
-         );
-         lsS.addMouseListener(
-             new MouseAdapter(){
-                 public void mouseReleased(MouseEvent e){
-                     if(e.getButton()==MouseEvent.BUTTON3&&lsS.getSelectedIndex()!=-1){
-                         popupInfo(
-                             MouseInfo.getPointerInfo().getLocation(),
-                             CDFLibrary.getCDS(lsS.getSelectedItem())
-                         );
-                     }
-                 }
-             }
-         );
-         lsS.setBounds(240,70,125,160);
+        add(allSongList);
+        for(ChooseDataSong cds:allSongs){
+            allSongList.add(cds.getName());
+        }
+        allSongList.addItemListener(
+            (e)->{
+                if(e.getStateChange()==ItemEvent.SELECTED){
+                    addButton.setEnabled(true);
+                }
+                else if(e.getStateChange()==ItemEvent.DESELECTED){
+                    addButton.setEnabled(false);
+                }
+            }
+        );
+        allSongList.addMouseListener(
+            new MouseAdapter(){
+                public void mouseReleased(MouseEvent e){
+                    if(e.getButton()==MouseEvent.BUTTON3&&allSongList.getSelectedIndex()!=-1){
+                        popupInfo(
+                            MouseInfo.getPointerInfo().getLocation(),
+                            allSongs[allSongList.getSelectedIndex()]
+                        );
+                    }
+                }
+            }
+        );
+        allSongList.setBounds(240,70,125,160);
         
-        add(btS);
-         btS.setEnabled(false);
-         btS.addActionListener(
-             new ActionListener(){
-                 public void actionPerformed(ActionEvent e){
-                     int a[] = new int[lsL.getItemCount()];
-                     for(int i=0;i<lsL.getItemCount();i++){
-                         a[i] = CDFLibrary.getSongNumber(lsL.getItem(i));
-                     }
-                     CDFLibrary.addNewPlayListData(tfn.getText(),a);
-                     setVisible(false);
-                 }
-             }
-         );
-         btS.setBounds(210,250,70,20);
+        add(saveButton);
+        saveButton.setEnabled(false);
+        saveButton.addActionListener(
+            (e)->{
+                int a[] = new int[listSongList.getItemCount()];
+                for(int i=0;i<listSongList.getItemCount();i++){
+                    a[i] = listSongs.get(i).getId();
+                }
+                CDFLibrary.addNewPlayListData(tfn.getText(),a);
+                setVisible(false);
+            }
+        );
+        saveButton.setBounds(210,250,70,20);
         
-        add(btC);
-         btC.addActionListener(
-             new ActionListener(){
-                 public void actionPerformed(ActionEvent e){
-                     setVisible(false);
-                 }
-             }
-         );
-         btC.setBounds(290,250,70,20);
+        add(canselButton);
+        canselButton.addActionListener((e)->setVisible(false));
+        canselButton.setBounds(290,250,70,20);
         
         setLayout(null);
         setSize(380,290);
@@ -182,25 +168,24 @@ public class CDLNewer extends Dialog{
         setVisible(true);
     }
     
-    
     void popupInfo(Point p,ChooseDataSong cds){
         System.out.println(cds.getName());
-        if(pi!=null){
-            pi.hide();
-            pi=null;
+        if(popSong!=null){
+            popSong.hide();
+            popSong=null;
         }
-        pi = new PopInfoInCDLN(p,cds);
-        pi.show();
+        popSong = new PopSongInfo(p,cds);
+        popSong.show();
     }
     
-    class PopInfoInCDLN extends Popup{
-        public PopInfoInCDLN(Point p,ChooseDataSong cd){
-            super(CDLNewer.this,new PnInfoInCDLN(cd),(int)(p.getX()),(int)(p.getY()));
+    class PopSongInfo extends Popup{
+        public PopSongInfo(Point p,ChooseDataSong cds){
+            super(CDLNewer.this,new PnSongInfo(cds),(int)(p.getX()),(int)(p.getY()));
         }
     }
     
-    class PnInfoInCDLN extends Panel{
-        PnInfoInCDLN(ChooseDataSong cds){
+    class PnSongInfo extends Panel{
+        PnSongInfo(ChooseDataSong cds){
             setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
             Label name = new Label(cds.getName());
             Label grade = new Label(String.valueOf(cds.getGrade()));
@@ -214,7 +199,6 @@ public class CDLNewer extends Dialog{
             add(date);
             add(with);
             add(score);
-            
         }
     }
 }

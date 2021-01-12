@@ -1,10 +1,10 @@
 import java.awt.*;
 
-public class TD extends Panel implements PlayStateDisplay{
+public class TimeDisplay extends Panel implements PlayStateDisplay{
     Label label = new Label("0:00/0:00",Label.CENTER);
     PlayState state;
     
-    TD(){
+    TimeDisplay(){
         setLayout(null);
         setBackground(Color.white);
         add(label);
@@ -17,7 +17,7 @@ public class TD extends Panel implements PlayStateDisplay{
         }
         label.setText(secToTime(state.microPosition/1000000)+"/"+secToTime(state.maxMicro/1000000));
     }
-    String secToTime(long a){
+    static private String secToTime(long a){
         return a/60+":"+(((a%60)<10)?"0":"")+a%60;
     }
     

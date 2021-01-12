@@ -1,42 +1,33 @@
 public class ChooseDataSong extends ChooseData{
-    String fname;
-    String name;
-    int grade;
-    String comment;
-    String date;
-    String with;
-    String score;
+    final int id;
     
-    ChooseDataSong(String fname,String name,int grade,String comment,String date,String with,String score){
-        this.fname=fname;
-        this.name=name;
-        this.grade=grade;
-        this.comment=comment;
-        this.date=date;
-        this.with=with;
-        this.score=score;
+    ChooseDataSong(int id){
+        this.id=id;
     }
     
-    String getFname(){
-        return fname;
+    public int getId(){
+      return id;
     }
-    String getName(){
-        return name;
+    public String getFname(){
+        return CDFLibrary.getSongFile(id);
     }
-    int getGrade(){
-        return grade;
+    public String getName(){
+        return CDFLibrary.getSongName(id);
     }
-    String getComment(){
-        return comment;
+    public int getGrade(){
+        return CDFLibrary.getSongEval(id);
     }
-    String getDate(){
-        return date;
+    public String getComment(){
+        return CDFLibrary.getSongComment(id);
     }
-    String getWith(){
-        return with;
+    public String getDate(){
+        return CDFLibrary.getSongDate(id);
     }
-    String getScore(){
-        return score;
+    public String getWith(){
+        return CDFLibrary.getSongWith(id);
     }
-    boolean isSong(){return true;}
+    public String getScore(){
+        return CDFLibrary.getSongScore(id);
+    }
+    public boolean isSong(){return true;}
 }

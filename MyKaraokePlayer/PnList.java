@@ -3,207 +3,198 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class PnList extends Panel{
-    ChooseData cda[];
-    PnList pn = this;
-    TextField tf=new TextField();
+    ChooseData[] cda;
+    TextField searchField=new TextField();
     Panel pnSwitch = new Panel(null);
     CheckboxGroup cbg = new CheckboxGroup();
     Checkbox cbSong = new Checkbox("単曲",cbg,true);
     Checkbox cbPlayList = new Checkbox("プレイリスト",cbg,false);
     
-    List ls;
-    PopInfo pi;
-    PopInfo piS;
+    List list;
+    PopListInfo popList;
+    PopSongInfo popSong;
     
     PnList(){
         setLayout(null);
         setBackground(Color.black);
-        
         cda=CDFLibrary.getMatchCDSs("");
-        ls=createListFrom(cda);
-        ls.addActionListener(
-            (e)->{
-                CDPlayer.setCD(cda[ls.getSelectedIndex()]);
-                transferFocus();
-            }
-        );
-        ls.addMouseListener(
-            new MouseAdapter(){
-                public void mouseReleased(MouseEvent e){
-                    if(e.getButton()==MouseEvent.BUTTON3&&ls.getSelectedIndex()!=-1){
-                        popupInfo(MouseInfo.getPointerInfo().getLocation(),cda[ls.getSelectedIndex()]);
-                    }
-                }
-            }
-        );
-        add(ls);
-        add(tf);
-        tf.addTextListener((e)->update(tf.getText()));
-        add(pnSwitch);
+        list=createListFrom(cda);
+        add(list);
+        searchField.addTextListener((e)->update(searchField.getText()));
+        add(searchField);
         pnSwitch.setBackground(Color.gray);
         pnSwitch.add(cbSong);
         pnSwitch.add(cbPlayList);
+        add(pnSwitch);
         ItemListener il=(e)->update(cbSong.getState());
         cbSong.addItemListener(il);
         cbPlayList.addItemListener(il);
         addMouseMotionListener(
             new MouseMotionListener(){
                 public void mouseDragged(MouseEvent e){
-                    pHide();
-                    pSHide();
+                    hideListInfo();
+                    hideSongInfo();
                 }
                 public void mouseMoved(MouseEvent e){
-                    pHide();
-                    pSHide();
+                    hideListInfo();
+                    hideSongInfo();
                 }
             }
         );
     }
     
     public void selfLayout(){
-        tf.setBounds(40,5,getWidth()-80,20);
-        pnSwitch.setBounds(0,tf.getY()+tf.getHeight()+5,getWidth(),30);
+        searchField.setBounds(40,5,getWidth()-80,20);
+        pnSwitch.setBounds(0,searchField.getY()+searchField.getHeight()+5,getWidth(),30);
         cbSong.setBounds(40,5,50,20);
         cbPlayList.setBounds(90,5,100,20);
-        ls.setBounds(40,pnSwitch.getY()+pnSwitch.getHeight()+5,getWidth()-80,getHeight()-70);
+        list.setBounds(40,pnSwitch.getY()+pnSwitch.getHeight()+5,getWidth()-80,getHeight()-70);
     }
 
     void update(boolean isSong){
-        update(tf.getText(),isSong);
+        update(searchField.getText(),isSong);
     }
-    void update(String tf){
-        update(tf,cbSong.getState());
+    void update(String searchField){
+        update(searchField,cbSong.getState());
     }
-    void update(String tf,boolean isSong){
+    void update(String searchField,boolean isSong){
         if(isSong){
-            cda=CDFLibrary.getMatchCDSs(tf);
+            cda=CDFLibrary.getMatchCDSs(searchField);
         }else{
-            cda=CDFLibrary.getMatchCDLs(tf);
+            cda=CDFLibrary.getMatchCDLs(searchField);
         }
         List l=createListFrom(cda);
-        l.addActionListener(
-            (e)->{
-                CDPlayer.setCD(cda[ls.getSelectedIndex()]);
-                transferFocus();
-            }
-        );
-        l.addMouseListener(
-            new MouseAdapter(){
-                public void mouseReleased(MouseEvent e){
-                    if(e.getButton()==MouseEvent.BUTTON3&&ls.getSelectedIndex()!=-1){
-                        popupInfo(MouseInfo.getPointerInfo().getLocation(),cda[ls.getSelectedIndex()]);
-                    }
-                }
-            }
-        );
-        remove(ls);
-        ls=l;
-        add(ls);
+        remove(list);
+        list=l;
+        add(list);
         selfLayout();
     }
     
-    static List createListFrom(ChooseData[] cda){
-      List res=new List();
-      for(ChooseData cd:cda){
-          res.add(cd.getName());
-      }
-      return res;
-    }
-    
-    void popupInfo(Point p,ChooseData cd){
-        pHide();
-        pi = new PopInfo(p,cd);
-        pi.show();
-    }
-    
-    void popupInfoS(Point p,ChooseDataSong cds){
-        pSHide();
-        piS = new PopInfo(p,cds);
-        piS.show();
-    }
-    
-    void pHide(){
-        if(pi != null){
-            pi.hide();
-            pi = null;
+    private List createListFrom(ChooseData[] cda){
+        List res=new List();
+        for(ChooseData cd:cda){
+            res.add(cd.getName());
         }
-    }
-    void pSHide(){
-        if(piS != null){
-            piS.hide();
-            piS = null;
-        }
-    }
-    
-    class PopInfo extends Popup{
-        public PopInfo(Point p,ChooseData cd){
-            super(pn,new PnInfo(cd),(int)(p.getX()),(int)(p.getY()));
-        }
-    }
-    
-    class PnInfo extends Panel{
-        PnInfo pni = this;
-        PnInfo(ChooseData cd){
-            setLayout(new BoxLayout(pni,BoxLayout.Y_AXIS));
-            if(cd.isSong()){
-                ChooseDataSong cds=(ChooseDataSong)cd;
-                Label name = new Label(cds.getName());
-                Label grade = new Label(String.valueOf(cds.getGrade()));
-                Label comment = new Label(cds.getComment());
-                Label date = new Label(cds.getDate());
-                Label with = new Label(cds.getWith());
-                Label score = new Label(cds.getScore());
-                Button btEdit = new Button("編集");
-                btEdit.addActionListener(
-                    (e)->{
-                        pHide();
-                        pSHide();
-                        new CDSEditor(cds);
-                    }
-                );
-                add(name);
-                add(grade);
-                add(comment);
-                add(date);
-                add(with);
-                add(score);
-                add(btEdit);
+        res.addActionListener(
+            (e)->{
+                CDPlayer.setCD(cda[list.getSelectedIndex()]);
+                transferFocus();
             }
-            else{
-                ChooseDataList cdl=(ChooseDataList)cd;
-                List lss = new List(cdl.number()+2,false);
-                lss.addMouseListener(
-                    new MouseAdapter(){
-                        public void mouseReleased(MouseEvent e){
-                            if(e.getButton()==MouseEvent.BUTTON3&&lss.getSelectedIndex()!=-1){
-                                popupInfoS(MouseInfo.getPointerInfo().getLocation(),CDFLibrary.getCDS(lss.getSelectedItem()));
-                            }
+        );
+        res.addMouseListener(
+            new MouseAdapter(){
+                public void mouseReleased(MouseEvent e){
+                    if(e.getButton()==MouseEvent.BUTTON3&&list.getSelectedIndex()!=-1){
+                        ChooseData cd=cda[list.getSelectedIndex()];
+                        if(cd.isSong()){
+                            showSongInfo(MouseInfo.getPointerInfo().getLocation(),(ChooseDataSong)cd);
+                        }else{
+                            showListInfo(MouseInfo.getPointerInfo().getLocation(),(ChooseDataList)cd);
                         }
                     }
-                );
-                for(int i:cdl.getSongs()){
-                    lss.add(CDFLibrary.getCDS(i).getFname());
                 }
-                Button btEdit = new Button("編集");
-                btEdit.addActionListener(
-                    (e)->{
-                        pHide();
-                        pSHide();
-                        new CDLEditor(cdl);
-                    }
-                );
-                Button btDelete = new Button("削除");
-                btDelete.addActionListener(
-                    (e)->{
-                        pHide();
-                        pSHide();
-                        CDFLibrary.playListDelete(cdl.getName());
-                    }
-                );
-                add(lss);
-                add(btEdit);
-                add(btDelete);
             }
+        );
+        return res;
+    }
+    
+    private void showSongInfo(Point p,ChooseDataSong cds){
+        hideSongInfo();
+        popSong = new PopSongInfo(p,cds);
+        popSong.show();
+    }
+    private void showListInfo(Point p,ChooseDataList cdl){
+        hideListInfo();
+        popList = new PopListInfo(p,cdl);
+        popList.show();
+    }
+    private void hideSongInfo(){
+        if(popSong != null){
+            popSong.hide();
+            popSong = null;
+        }
+    }
+    private void hideListInfo(){
+        if(popList != null){
+            popList.hide();
+            popList = null;
+        }
+    }
+    
+    class PopSongInfo extends Popup{
+        public PopSongInfo(Point p,ChooseDataSong cds){
+            super(PnList.this,new PnSongInfo(cds),(int)(p.getX()),(int)(p.getY()));
+        }
+    }
+    class PopListInfo extends Popup{
+        public PopListInfo(Point p,ChooseDataList cdl){
+            super(PnList.this,new PnListInfo(cdl),(int)(p.getX()),(int)(p.getY()));
+        }
+    }
+    
+    class PnSongInfo extends Panel{
+        PnSongInfo(ChooseDataSong cds){
+            setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
+            Label name = new Label(cds.getName());
+            Label grade = new Label(String.valueOf(cds.getGrade()));
+            Label comment = new Label(cds.getComment());
+            Label date = new Label(cds.getDate());
+            Label with = new Label(cds.getWith());
+            Label score = new Label(cds.getScore());
+            Button btEdit = new Button("編集");
+            btEdit.addActionListener(
+                (e)->{
+                    hideListInfo();
+                    hideSongInfo();
+                    new CDSEditor(cds);
+                }
+            );
+            add(name);
+            add(grade);
+            add(comment);
+            add(date);
+            add(with);
+            add(score);
+            add(btEdit);
+        }
+    }
+    class PnListInfo extends Panel{
+        PnListInfo(ChooseDataList cdl){
+            setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
+            ChooseDataSong[] cdsa=cdl.getSongs();
+            List songList = new List(cdl.size(),false);
+            songList.addMouseListener(
+                new MouseAdapter(){
+                    public void mouseReleased(MouseEvent e){
+                        if(e.getButton()==MouseEvent.BUTTON3&&songList.getSelectedIndex()!=-1){
+                            ChooseDataSong cds=cdsa[songList.getSelectedIndex()];
+                            showSongInfo(MouseInfo.getPointerInfo().getLocation(),cds);
+                        }
+                    }
+                }
+            );
+            for(ChooseDataSong cds:cdsa){
+                songList.add(cds.getFname());
+            }
+            Button editButton = new Button("編集");
+            editButton.addActionListener(
+                (e)->{
+                    hideListInfo();
+                    hideSongInfo();
+                    new CDLEditor(cdl);
+                }
+            );
+            Button deleteButton = new Button("削除");
+            deleteButton.addActionListener(
+                (e)->{
+                    hideListInfo();
+                    hideSongInfo();
+                    CDFLibrary.playListDelete(cdl.getId());
+                }
+            );
+            add(songList);
+            add(editButton);
+            add(deleteButton);
         }
     }
 }

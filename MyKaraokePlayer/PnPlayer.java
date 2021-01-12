@@ -3,8 +3,8 @@ import java.awt.event.*;
 
 public class PnPlayer extends Panel implements PlayStateDisplay{
     Button btPlay = new Button("||");
-    SB sb = new SB();
-    TD td = new TD();
+    SeekBar sb = new SeekBar();
+    TimeDisplay td = new TimeDisplay();
     Button btPrev = new Button("|<");
     Button btNext = new Button(">|");
     PlayState state;

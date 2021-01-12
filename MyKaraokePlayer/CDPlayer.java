@@ -1,4 +1,5 @@
 import java.io.*;
+import javax.swing.Timer;
 import javax.sound.sampled.*;
 
 public class CDPlayer{
@@ -6,13 +7,14 @@ public class CDPlayer{
     static StringDisplay sDisp;
     static PlayStateDisplay psDisp;
     static Thread psdThr;
+    static Timer timer=new Timer(100,(e)->psDisplayUpdate());
     static ChooseData cd = null;
     static AudioInputStream ais;
     static AudioInputStream dais;
     static AudioFormat af;
     static Clip clip;
     static java.util.List<LineListener> listeners=new java.util.ArrayList<>();
-    static int number;//再生中のCDSがCDLの配列のどのインデックスの奴かを指す。0～CDL.number()-1
+    static int number;//再生中のCDSがCDLの配列のどのインデックスの奴かを指す。0～CDL.size()-1
     
     public static void setStringDisplay(StringDisplay sDisp){
         CDPlayer.sDisp = sDisp;
@@ -21,6 +23,7 @@ public class CDPlayer{
         CDPlayer.psDisp = psDisp;
     }
     private static void psDisplayUpdate(){
+        if(psDisp==null){return;}
         psDisp.setPlayState(
             new PlayState(
                 clip.isRunning(),
@@ -42,9 +45,13 @@ public class CDPlayer{
         else{
             ChooseDataList cdl=(ChooseDataList)cd;
             number = 0;
-            ChooseDataSong cds=CDFLibrary.getCDS(cdl.getSongs()[number]);
+            if(cdl.size()<1){
+                sDisp.setString("0/0 MyKarakePlayer");
+                return;
+            }
+            ChooseDataSong cds=cdl.getSongs()[number];
             mplay(cds.getFname());
-            sDisp.setString((number+1)+"/"+cdl.number()+" "+cds.getName()+" MyKarakePlayer");
+            sDisp.setString((number+1)+"/"+cdl.size()+" "+cds.getName()+" MyKarakePlayer");
         }
     }
     private static void stop(){
@@ -87,19 +94,10 @@ public class CDPlayer{
             clip.addLineListener(
                 (e)->{
                     if(e.getType()==LineEvent.Type.START){
-                        psdThr=new Thread(
-                            ()->{
-                                try{
-                                    while(clip.isRunning()){
-                                        psDisplayUpdate();
-                                        psdThr.sleep(100);
-                                    }
-                                }catch(InterruptedException ex){}
-                            }
-                        );
-                        psdThr.start();
+                        timer.start();
                     }else if(e.getType()==LineEvent.Type.STOP){
                         psDisplayUpdate();
+                        timer.stop();
                         if(clip.getFramePosition()>=clip.getFrameLength()){
                             if(cd.isSong()){
                                 setFramePosition(0);
@@ -124,12 +122,12 @@ public class CDPlayer{
         }
     }
     public static void next(){
-        if( !cd.isSong() && number+1 < ((ChooseDataList)cd).number() ){
+        if( !cd.isSong() && number+1 < ((ChooseDataList)cd).size() ){
             ChooseDataList cdl=(ChooseDataList)cd;
             stop();
             number++;
-            mplay(CDFLibrary.getCDS(cdl.getSongs()[number]).getFname());
-            sDisp.setString((number+1)+"/"+cdl.number()+" "+CDFLibrary.getCDS(cdl.getSongs()[number]).getName()+" MyKarakePlayer");
+            mplay(cdl.getSongs()[number].getFname());
+            sDisp.setString((number+1)+"/"+cdl.size()+" "+cdl.getSongs()[number].getName()+" MyKarakePlayer");
         }
     }
     public static void prev(){
@@ -137,8 +135,8 @@ public class CDPlayer{
             ChooseDataList cdl=(ChooseDataList)cd;
             stop();
             number--;
-            mplay(CDFLibrary.getCDS(cdl.getSongs()[number]).getFname());
-            sDisp.setString((number+1)+"/"+cdl.number()+" "+CDFLibrary.getCDS(cdl.getSongs()[number]).getName()+" MyKarakePlayer");
+            mplay(cdl.getSongs()[number].getFname());
+            sDisp.setString((number+1)+"/"+cdl.size()+" "+cdl.getSongs()[number].getName()+" MyKarakePlayer");
         }else{
             CDPlayer.setFramePosition(0);
         }

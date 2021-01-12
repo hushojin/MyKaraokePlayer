@@ -1,25 +1,22 @@
 public class ChooseDataList extends ChooseData{
-    String name;
-    int cdsl[];
-    ChooseDataList(String name,int[] cdsl){
-        this.name = name;
-        this.cdsl = cdsl;
+    final int id;
+    ChooseDataList(int id){
+        this.id = id;
     }
     
-    String getName(){
-        return name;
+    public int getId(){
+        return id;
+    }
+    public String getName(){
+        return CDFLibrary.getListName(id);
+    }
+    public int size(){
+      return CDFLibrary.getListSize(id);
     }
     
-    int getSong(int index){
-        return cdsl[index];
+    public ChooseDataSong[] getSongs(){
+        return CDFLibrary.getSongsInList(id);
     }
     
-    int[] getSongs(){
-        return cdsl;
-    }
-    
-    int number(){
-        return cdsl.length;
-    }
-    boolean isSong(){return false;}
+    public boolean isSong(){return false;}
 }

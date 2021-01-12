@@ -78,7 +78,7 @@ public class CDSEditor extends Dialog{
         finish.addActionListener(
             new ActionListener(){
                 public void actionPerformed(ActionEvent e){
-                    CDFLibrary.songEdit(new ChooseDataSong(fname.getText(),name.getText(),Integer.valueOf(grade.getText()),comment.getText(),date.getText(),with.getText(),score.getText()));
+                    CDFLibrary.songEdit(cds.getId(),name.getText(),Integer.valueOf(grade.getText()),comment.getText(),date.getText(),with.getText(),score.getText());
                     setVisible(false);
                 }
             }

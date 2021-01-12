@@ -2,11 +2,11 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class SB extends Panel implements PlayStateDisplay{
+public class SeekBar extends Panel implements PlayStateDisplay{
     PlayState state;
     Label label = new Label("0:00:00");
     Popup pop;
-    SB(){
+    SeekBar(){
         setBackground(Color.white);
         setFocusable(false);
         label.setSize(55,23);
@@ -19,7 +19,7 @@ public class SB extends Panel implements PlayStateDisplay{
                 }
                 public void mouseEntered(MouseEvent e){
                     Point p=getLocationOnScreen();
-                    pop=PopupFactory.getSharedInstance().getPopup(SB.this,label,p.x,p.y-label.getHeight());
+                    pop=PopupFactory.getSharedInstance().getPopup(SeekBar.this,label,p.x,p.y-label.getHeight());
                     pop.show();
                 }
                 public void mouseExited(MouseEvent e){
@@ -47,7 +47,7 @@ public class SB extends Panel implements PlayStateDisplay{
             }
         );
     }
-    static String secToTime(int sec){
+    static private String secToTime(int sec){
       return (sec/3600)+":"+(sec/60%60<10?"0":"")+(sec/60%60)+":"+(sec%60<10?"0":"")+(sec%60);
     }
     

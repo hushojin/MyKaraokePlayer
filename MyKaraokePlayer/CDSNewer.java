@@ -49,9 +49,10 @@ public class CDSNewer extends Dialog{
                 FileDialog fd = new FileDialog(CDSNewer.this,"ファイル選択",FileDialog.LOAD);
                 fd.setDirectory("C:\\Users\\Owner\\Desktop\\Karaokewavs");
                 fd.setVisible(true);
+                if(fd.getFiles().length<1){return;};
                 fname.setText(fd.getFile());
                 name.setText(fname.getText().substring(0,fname.getText().length()-4));
-                if(CDFLibrary.getSongNumber(fname.getText()) == -1){
+                if(!CDFLibrary.existsSongFile(fname.getText())){
                     finish.setEnabled(true);
                 }else{
                     finish.setEnabled(false);
