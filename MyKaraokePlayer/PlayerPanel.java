@@ -3,13 +3,15 @@ import java.awt.event.*;
 
 public class PlayerPanel extends Panel implements PlayStateDisplay{
     private Button playButton = new Button("||");
-    private SeekBar seekBar = new SeekBar();
+    private SeekBar seekBar;
     private TimeDisplay timeDisplay = new TimeDisplay();
     private Button previousButton = new Button("|<");
     private Button nextButton = new Button(">|");
     private PlayState state;
     
-    PlayerPanel(){
+    PlayerPanel(DataPlayer player){
+        seekBar = new SeekBar(player);
+        
         setBackground(Color.gray);
         setLayout(null);
         add(playButton);
@@ -17,9 +19,9 @@ public class PlayerPanel extends Panel implements PlayStateDisplay{
         playButton.addActionListener(
             (e)->{
                 if(state.isPlaying){
-                    DataPlayer.pause();
+                    player.pause();
                 }else{
-                    DataPlayer.start();
+                    player.start();
                 }
             }
         );
@@ -27,9 +29,9 @@ public class PlayerPanel extends Panel implements PlayStateDisplay{
             new KeyAdapter(){
                 public void keyPressed(KeyEvent e){
                     if(e.getKeyCode()==KeyEvent.VK_LEFT){
-                        DataPlayer.shiftSecond(-5);
+                        player.shiftSecond(-5);
                     }else if(e.getKeyCode()==KeyEvent.VK_RIGHT){
-                        DataPlayer.shiftSecond(5);
+                        player.shiftSecond(5);
                     }
                 }
             }
@@ -40,7 +42,7 @@ public class PlayerPanel extends Panel implements PlayStateDisplay{
         previousButton.setFocusable(false);
         previousButton.addActionListener(
             (e)-> {
-                DataPlayer.prev();
+                player.prev();
                 if(playButton.isEnabled()){
                     playButton.requestFocusInWindow();
                 }
@@ -50,13 +52,13 @@ public class PlayerPanel extends Panel implements PlayStateDisplay{
         nextButton.setFocusable(false);
         nextButton.addActionListener(
             (e)->{
-                DataPlayer.next();
+                player.next();
                 if(playButton.isEnabled()){
                     playButton.requestFocusInWindow();
                 }
             }
         );
-        DataPlayer.setPlayStateDisplay(this);
+        player.setPlayStateDisplay(this);
     }
     
     public void selfLayout(){
@@ -77,6 +79,12 @@ public class PlayerPanel extends Panel implements PlayStateDisplay{
     }
     public void setPlayState(PlayState state){
         this.state=state;
+        if(state==null){
+          playButton.setEnabled(false);
+          previousButton.setEnabled(false);
+          nextButton.setEnabled(false);
+          seekBar.setEnabled(false);
+        }
         playButton.setEnabled(true);
         if(state.isPlaying){
             playButton.setLabel("||");

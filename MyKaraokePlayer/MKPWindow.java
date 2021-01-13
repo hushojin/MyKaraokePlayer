@@ -6,9 +6,11 @@ public class MKPWindow extends Frame implements StringDisplay{
     private ListPanel listPanel;
     private PlayerPanel playerPanel;
     MKPWindow() {
-        listPanel = new ListPanel();
-        playerPanel = new PlayerPanel();
-
+        DataPlayer player = new DataPlayer();
+        listPanel = new ListPanel(player);
+        playerPanel = new PlayerPanel(player);
+        player.setStringDisplay(this);
+        
         setLayout(null);
         setTitle("MyKaraokePlayer");
         setSize(400, 350);
@@ -34,7 +36,6 @@ public class MKPWindow extends Frame implements StringDisplay{
           setIconImage(javax.imageio.ImageIO.read(new File("MKPicon1.png")));
         }catch(IOException e){}
         
-        DataPlayer.setStringDisplay(this);
         setVisible(true);
     }
     

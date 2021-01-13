@@ -6,7 +6,7 @@ public class SeekBar extends Panel implements PlayStateDisplay{
     private PlayState state;
     private Label label = new Label("0:00:00");
     private Popup pop;
-    public SeekBar(){
+    public SeekBar(DataPlayer player){
         setBackground(Color.white);
         setFocusable(false);
         label.setSize(55,23);
@@ -15,7 +15,7 @@ public class SeekBar extends Panel implements PlayStateDisplay{
                 public void mouseReleased(MouseEvent e){
                     double cursorFrame = 1.0*(getMousePosition().getX()-5)/(getWidth()-10)*state.maxFrame;
                     cursorFrame=Math.max(Math.min(cursorFrame,state.maxFrame),0);
-                    DataPlayer.setFramePosition((int)cursorFrame);
+                    player.setFramePosition((int)cursorFrame);
                 }
                 public void mouseEntered(MouseEvent e){
                     Point p=getLocationOnScreen();

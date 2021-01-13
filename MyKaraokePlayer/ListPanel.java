@@ -12,8 +12,10 @@ public class ListPanel extends Panel{
     private List list;
     private PopListInfo popList;
     private PopSongInfo popSong;
+    private DataPlayer player;
     
-    public ListPanel(){
+    public ListPanel(DataPlayer player){
+        this.player=player;
         setLayout(null);
         setBackground(Color.black);
         datas=DataLibrary.getMatchSongs("");
@@ -78,7 +80,7 @@ public class ListPanel extends Panel{
         }
         res.addActionListener(
             (e)->{
-                DataPlayer.setData(datas[list.getSelectedIndex()]);
+                player.setData(datas[list.getSelectedIndex()]);
                 transferFocus();
             }
         );
