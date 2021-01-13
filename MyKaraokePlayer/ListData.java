@@ -1,5 +1,5 @@
 public class ListData extends Data{
-    final int id;
+    private final int id;
     ListData(int id){
         this.id = id;
     }

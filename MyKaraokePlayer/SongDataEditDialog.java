@@ -2,32 +2,32 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class SongDataEditDialog extends Dialog{
-    SongDataEditDialog(SongData cds){
+    SongDataEditDialog(SongData sd){
         super((Frame)null,"曲編集",true);
         
         Label fnl = new Label("ファイル名:",Label.RIGHT);
-        Label fname = new Label(cds.getFname());
+        Label fname = new Label(sd.getFname());
         
         Label nl = new Label("曲名",Label.RIGHT);
-        TextField name = new TextField(cds.getName());
+        TextField name = new TextField(sd.getName());
         
         Label gl = new Label("評価:",Label.RIGHT);
-        TextField grade = new TextField(String.valueOf(cds.getGrade()));
+        TextField grade = new TextField(String.valueOf(sd.getGrade()));
         
         Label cl = new Label("コメント:",Label.RIGHT);
-        TextField comment = new TextField(cds.getComment());
+        TextField comment = new TextField(sd.getComment());
         
         Label wl = new Label("同伴:",Label.RIGHT);
-        TextField with = new TextField(cds.getWith());
+        TextField with = new TextField(sd.getWith());
         
         Label dl = new Label("日付:",Label.RIGHT);
-        TextField date = new TextField(cds.getDate());
+        TextField date = new TextField(sd.getDate());
         
         Label sl = new Label("スコア:",Label.RIGHT);
-        TextField score = new TextField(cds.getScore());
+        TextField score = new TextField(sd.getScore());
         
         Button finish = new Button("保存");
-        Button cansell = new Button("キャンセル");
+        Button cancel = new Button("キャンセル");
         
         addWindowListener(
             new WindowAdapter(){
@@ -78,14 +78,14 @@ public class SongDataEditDialog extends Dialog{
         finish.addActionListener(
             new ActionListener(){
                 public void actionPerformed(ActionEvent e){
-                    DataLibrary.editSong(cds.getId(),name.getText(),Integer.valueOf(grade.getText()),comment.getText(),date.getText(),with.getText(),score.getText());
+                    DataLibrary.editSong(sd.getId(),name.getText(),Integer.valueOf(grade.getText()),comment.getText(),date.getText(),with.getText(),score.getText());
                     setVisible(false);
                 }
             }
         );
-        add(cansell);
-        cansell.setBounds(240,250,70,20);
-        cansell.addActionListener(
+        add(cancel);
+        cancel.setBounds(240,250,70,20);
+        cancel.addActionListener(
             new ActionListener(){
                 public void actionPerformed(ActionEvent e){
                     setVisible(false);

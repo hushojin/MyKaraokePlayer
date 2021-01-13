@@ -3,8 +3,8 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class ListDataEditDialog extends Dialog{
-    PopSongInfo popSong;
-    ListDataEditDialog(ListData cdl){
+    private PopSongInfo popSong;
+    public ListDataEditDialog(ListData cdl){
         super((Frame)null,"プレイリスト編集",true);
         String defaultName = cdl.getName();
         Label ln = new Label("名前:");
@@ -13,10 +13,10 @@ public class ListDataEditDialog extends Dialog{
         List listSongList = new List();
         Button removeButton = new Button("削除>>");
         Button addButton = new Button("<<追加");
-        SongData[] allSongs=DataLibrary.getMatchCDSs("");
+        SongData[] allSongs=DataLibrary.getMatchSongs("");
         List allSongList = new List();
         Button saveButton = new Button("保存");
-        Button canselButton = new Button("キャンセル");
+        Button cancelButton = new Button("キャンセル");
         
         addWindowListener(
             new WindowAdapter(){
@@ -163,9 +163,9 @@ public class ListDataEditDialog extends Dialog{
         );
         saveButton.setBounds(210,250,70,20);
         
-        add(canselButton);
-        canselButton.addActionListener((e)->setVisible(false));
-        canselButton.setBounds(290,250,70,20);
+        add(cancelButton);
+        cancelButton.addActionListener((e)->setVisible(false));
+        cancelButton.setBounds(290,250,70,20);
         
         setLayout(null);
         setSize(380,290);
@@ -174,7 +174,7 @@ public class ListDataEditDialog extends Dialog{
     }
     
     
-    void popupInfo(Point p,SongData cds){
+    private void popupInfo(Point p,SongData cds){
         if(popSong!=null){
             popSong.hide();
             popSong=null;
@@ -183,13 +183,13 @@ public class ListDataEditDialog extends Dialog{
         popSong.show();
     }
     
-    class PopSongInfo extends Popup{
+    private class PopSongInfo extends Popup{
         public PopSongInfo(Point p,SongData cds){
             super(ListDataEditDialog.this,new PnSongInfo(cds),(int)(p.getX()),(int)(p.getY()));
         }
     }
     
-    class PnSongInfo extends Panel{
+    private class PnSongInfo extends Panel{
         PnSongInfo(SongData cds){
             setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
             Label name = new Label(cds.getName());

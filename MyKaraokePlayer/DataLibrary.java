@@ -12,7 +12,7 @@ public class DataLibrary{
         }catch(SQLException e){e.printStackTrace();}
     }
     
-    public static void editSong(int id,String name,int grade,String comment,String date,String with,String score){
+    public static void editSong(int songId,String name,int grade,String comment,String date,String with,String score){
         try{
             String sql="UPDATE SONGS SET"+
                 " TITLE='"+escape(name)+"'"+
@@ -21,7 +21,7 @@ public class DataLibrary{
                 ",SCORE='"+escape(score)+"'"+
                 ",COMM='"+escape(comment)+"'"+
                 ",COMP='"+escape(with)+"'"+
-                " WHERE ID='"+id+"'";
+                " WHERE ID='"+songId+"'";
             System.out.println("["+sql+"]");
             PreparedStatement ps=conn.prepareCall(sql);
             ps.executeUpdate();
@@ -49,15 +49,15 @@ public class DataLibrary{
         }
     }
     
-    public static void addNewListData(String name,int[] cdss){
+    public static void addNewListData(String name,int[] songIds){
         try{
             String sql="INSERT INTO LISTS VALUES (0,'"+escape(name)+"')";
             System.out.println("["+sql+"]");
             PreparedStatement ps=conn.prepareCall(sql);
             ps.executeUpdate();
             int listid=getListId(name);
-            for(int i=1;i<=cdss.length;i++){
-                sql="INSERT INTO LISTSONGS VALUES ('"+listid+"',"+i+","+cdss[i-1]+")";
+            for(int i=1;i<=songIds.length;i++){
+                sql="INSERT INTO LISTSONGS VALUES ('"+listid+"',"+i+","+songIds[i-1]+")";
                 System.out.println("["+sql+"]");
                 ps=conn.prepareCall(sql);
                 ps.executeUpdate();
@@ -67,9 +67,9 @@ public class DataLibrary{
         }
     }
     
-    public static void deleteList(int id){
+    public static void deleteList(int listId){
         try{
-            String sql="DELETE FROM LISTS WHERE ID='"+id+"'";
+            String sql="DELETE FROM LISTS WHERE ID='"+listId+"'";
             System.out.println("["+sql+"]");
             PreparedStatement ps=conn.prepareCall(sql);
             ps.executeUpdate();
@@ -78,19 +78,19 @@ public class DataLibrary{
         }
     }
     
-    public static void editList(int id,String newName,int[] newSongIDs){
+    public static void editList(int listId,String newName,int[] newSongIds){
         try{
-            String sql="DELETE FROM LISTSONGS WHERE LISTID="+id;
+            String sql="DELETE FROM LISTSONGS WHERE LISTID="+listId;
             System.out.println("["+sql+"]");
-            for(int i=1;i<=newSongIDs.length;i++){
-                sql="INSERT INTO LISTSONGS VALUES ('"+id+"',"+i+","+newSongIDs[i-1]+")";
+            for(int num=1;num<=newSongIds.length;num++){
+                sql="INSERT INTO LISTSONGS VALUES ('"+listId+"',"+num+","+newSongIds[num-1]+")";
                 System.out.println("["+sql+"]");
                 PreparedStatement ps=conn.prepareCall(sql);
                 ps.executeUpdate();
             }
             sql="UPDATE LISTS SET "+
                 "LIST='"+escape(newName)+"' "+
-                "WHERE ID="+id;
+                "WHERE ID="+listId;
             System.out.println("["+sql+"]");
             PreparedStatement ps=conn.prepareCall(sql);
             ps.executeUpdate();
@@ -99,38 +99,38 @@ public class DataLibrary{
         }
     }
     
-    public static SongData[] getMatchCDSs(String s){
-        List<SongData> cdss=new ArrayList<>();
+    public static SongData[] getMatchSongs(String s){
+        List<SongData> songs=new ArrayList<>();
         try{
             String sql="SELECT ID FROM SONGS WHERE TITLE LIKE '%"+escapeForLike(s)+"%'";
             System.out.println("["+sql+"]");
             PreparedStatement ps=conn.prepareCall(sql);
             ResultSet rs=ps.executeQuery(); 
             while(rs.next()){
-                int id=rs.getInt(1);
-                cdss.add(new SongData(id));
+                int songId=rs.getInt(1);
+                songs.add(new SongData(songId));
             }
         }catch(SQLException e){
             e.printStackTrace();
         }
-        return cdss.toArray(new SongData[0]);
+        return songs.toArray(new SongData[0]);
     }
     
-    public static ListData[] getMatchCDLs(String s){
-        List<ListData> cdls=new ArrayList<>();
+    public static ListData[] getMatchLists(String s){
+        List<ListData> lists=new ArrayList<>();
         try{
             String sql="SELECT ID FROM LISTS WHERE LIST LIKE '%"+escapeForLike(s)+"%'";
             System.out.println("["+sql+"]");
             PreparedStatement ps=conn.prepareCall(sql);
             ResultSet rs=ps.executeQuery();
             while(rs.next()){
-                int id=rs.getInt(1);
-                cdls.add(new ListData(id));
+                int listId=rs.getInt(1);
+                lists.add(new ListData(listId));
             }
         }catch(SQLException e){
             e.printStackTrace();
         }
-        return cdls.toArray(new ListData[0]);
+        return lists.toArray(new ListData[0]);
     }
     public static boolean existsSongFile(String fname){
         return getSongId(fname)!=-1;
@@ -142,8 +142,8 @@ public class DataLibrary{
             PreparedStatement ps=conn.prepareCall(sql);
             ResultSet rs=ps.executeQuery(); 
             if(rs.next()){
-                int id=rs.getInt(1);
-                return id;
+                int songId=rs.getInt(1);
+                return songId;
             }
         }catch(SQLException e){
             e.printStackTrace();
@@ -153,15 +153,15 @@ public class DataLibrary{
     public static boolean existsListName(String lname){
         return getListId(lname)!=-1;
     }
-    private static int getListId(String lname){
+    private static int getListId(String listName){
         try{
-            String sql="SELECT ID FROM LISTS WHERE LIST='"+escape(lname)+"'";
+            String sql="SELECT ID FROM LISTS WHERE LIST='"+escape(listName)+"'";
             System.out.println("["+sql+"]");
             PreparedStatement ps=conn.prepareCall(sql);
             ResultSet rs=ps.executeQuery(); 
             if(rs.next()){
-                int id=rs.getInt(1);
-                return id;
+                int listId=rs.getInt(1);
+                return listId;
             }
         }catch(SQLException e){
             e.printStackTrace();
@@ -169,27 +169,27 @@ public class DataLibrary{
         return -1;
     }
     
-    public static String getSongName(int id){
-        return getStringValueFromTableById("TITLE","SONGS",id);
+    public static String getSongName(int songId){
+        return getStringValueFromTableById("TITLE","SONGS",songId);
     }
-    public static String getSongFile(int id){
-        return getStringValueFromTableById("FILE","SONGS",id);
+    public static String getSongFile(int songId){
+        return getStringValueFromTableById("FILE","SONGS",songId);
     }
-    public static String getSongDate(int id){
-        return getStringValueFromTableById("DATE","SONGS",id);
+    public static String getSongDate(int songId){
+        return getStringValueFromTableById("DATE","SONGS",songId);
     }
-    public static String getSongWith(int id){
-        return getStringValueFromTableById("COMP","SONGS",id);
+    public static String getSongWith(int songId){
+        return getStringValueFromTableById("COMP","SONGS",songId);
     }
-    public static String getSongComment(int id){
-        return getStringValueFromTableById("COMM","SONGS",id);
+    public static String getSongComment(int songId){
+        return getStringValueFromTableById("COMM","SONGS",songId);
     }
-    public static String getSongScore(int id){
-        return getStringValueFromTableById("SCORE","SONGS",id);
+    public static String getSongScore(int songId){
+        return getStringValueFromTableById("SCORE","SONGS",songId);
     }
-    public static int getSongEval(int id){
+    public static int getSongEval(int songId){
         try{
-            String sql="SELECT EVAL FROM SONGS WHERE ID="+id;
+            String sql="SELECT EVAL FROM SONGS WHERE ID="+songId;
             System.out.println("["+sql+"]");
             PreparedStatement ps=conn.prepareCall(sql);
             ResultSet rs=ps.executeQuery(); 
@@ -202,28 +202,28 @@ public class DataLibrary{
         }
         return 0;
     }
-    public static String getListName(int id){
-        return getStringValueFromTableById("LIST","LISTS",id);
+    public static String getListName(int listId){
+        return getStringValueFromTableById("LIST","LISTS",listId);
     }
-    public static SongData[] getListSongs(int id){
+    public static SongData[] getListSongs(int listId){
         List<SongData> list=new ArrayList<>();
         try{
-            String sql="SELECT SONGID FROM LISTSONGS WHERE LISTID="+id+" ORDER BY NUM";
+            String sql="SELECT SONGID FROM LISTSONGS WHERE LISTID="+listId+" ORDER BY NUM";
             System.out.println("["+sql+"]");
             PreparedStatement ps=conn.prepareCall(sql);
             ResultSet rs=ps.executeQuery(); 
             while(rs.next()){
-                int songid=rs.getInt(1);
-                list.add(new SongData(songid));
+                int songId=rs.getInt(1);
+                list.add(new SongData(songId));
             }
         }catch(SQLException e){
             e.printStackTrace();
         }
         return list.toArray(new SongData[0]);
     }
-    public static int getListSize(int id){
+    public static int getListSize(int listId){
         try{
-            String sql="SELECT COUNT(NUM) FROM LISTSONGS WHERE LISTID="+id;
+            String sql="SELECT COUNT(NUM) FROM LISTSONGS WHERE LISTID="+listId;
             System.out.println("["+sql+"]");
             PreparedStatement ps=conn.prepareCall(sql);
             ResultSet rs=ps.executeQuery(); 

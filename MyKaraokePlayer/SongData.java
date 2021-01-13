@@ -1,5 +1,5 @@
 public class SongData extends Data{
-    final int id;
+    private final int id;
     
     SongData(int id){
         this.id=id;

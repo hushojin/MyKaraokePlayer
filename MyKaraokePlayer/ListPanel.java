@@ -3,41 +3,48 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class ListPanel extends Panel{
-    Data[] cda;
-    TextField searchField=new TextField();
-    Panel pnSwitch = new Panel(null);
-    CheckboxGroup cbg = new CheckboxGroup();
-    Checkbox cbSong = new Checkbox("単曲",cbg,true);
-    Checkbox cbPlayList = new Checkbox("プレイリスト",cbg,false);
+    private Data[] datas;
+    private TextField searchField=new TextField();
+    private Panel checkboxPanel = new Panel(null);
+    private CheckboxGroup cbg = new CheckboxGroup();
+    private Checkbox songCheckbox = new Checkbox("単曲",cbg,true);
+    private Checkbox listCheckbox = new Checkbox("プレイリスト",cbg,false);
+    private List list;
+    private PopListInfo popList;
+    private PopSongInfo popSong;
     
-    List list;
-    PopListInfo popList;
-    PopSongInfo popSong;
-    
-    ListPanel(){
+    public ListPanel(){
         setLayout(null);
         setBackground(Color.black);
-        cda=DataLibrary.getMatchCDSs("");
-        list=createListFrom(cda);
+        datas=DataLibrary.getMatchSongs("");
+        list=createListFrom(datas);
         add(list);
-        searchField.addTextListener((e)->update(searchField.getText()));
+        searchField.addTextListener((e)->update());
         add(searchField);
-        pnSwitch.setBackground(Color.gray);
-        pnSwitch.add(cbSong);
-        pnSwitch.add(cbPlayList);
-        add(pnSwitch);
-        ItemListener il=(e)->update(cbSong.getState());
-        cbSong.addItemListener(il);
-        cbPlayList.addItemListener(il);
+        checkboxPanel.setBackground(Color.gray);
+        checkboxPanel.add(songCheckbox);
+        checkboxPanel.add(listCheckbox);
+        add(checkboxPanel);
+        ItemListener il=(e)->update();
+        songCheckbox.addItemListener(il);
+        listCheckbox.addItemListener(il);
         addMouseMotionListener(
             new MouseMotionListener(){
                 public void mouseDragged(MouseEvent e){
-                    hideListInfo();
-                    hideSongInfo();
+                    if(popSong != null){
+                        popSong.hide();
+                    }
+                    if(popList != null){
+                        popList.hide();
+                    }
                 }
                 public void mouseMoved(MouseEvent e){
-                    hideListInfo();
-                    hideSongInfo();
+                    if(popSong != null){
+                        popSong.hide();
+                    }
+                    if(popList != null){
+                        popList.hide();
+                    }
                 }
             }
         );
@@ -45,39 +52,33 @@ public class ListPanel extends Panel{
     
     public void selfLayout(){
         searchField.setBounds(40,5,getWidth()-80,20);
-        pnSwitch.setBounds(0,searchField.getY()+searchField.getHeight()+5,getWidth(),30);
-        cbSong.setBounds(40,5,50,20);
-        cbPlayList.setBounds(90,5,100,20);
-        list.setBounds(40,pnSwitch.getY()+pnSwitch.getHeight()+5,getWidth()-80,getHeight()-70);
+        checkboxPanel.setBounds(0,searchField.getY()+searchField.getHeight()+5,getWidth(),30);
+        songCheckbox.setBounds(40,5,50,20);
+        listCheckbox.setBounds(90,5,100,20);
+        list.setBounds(40,checkboxPanel.getY()+checkboxPanel.getHeight()+5,getWidth()-80,getHeight()-70);
     }
-
-    void update(boolean isSong){
-        update(searchField.getText(),isSong);
-    }
-    void update(String searchField){
-        update(searchField,cbSong.getState());
-    }
-    void update(String searchField,boolean isSong){
-        if(isSong){
-            cda=DataLibrary.getMatchCDSs(searchField);
+    
+    private void update(){
+        if(songCheckbox.getState()){
+            datas=DataLibrary.getMatchSongs(searchField.getText());
         }else{
-            cda=DataLibrary.getMatchCDLs(searchField);
+            datas=DataLibrary.getMatchLists(searchField.getText());
         }
-        List l=createListFrom(cda);
+        List l=createListFrom(datas);
         remove(list);
         list=l;
         add(list);
         selfLayout();
     }
     
-    private List createListFrom(Data[] cda){
+    private List createListFrom(Data[] datas){
         List res=new List();
-        for(Data cd:cda){
+        for(Data cd:datas){
             res.add(cd.getName());
         }
         res.addActionListener(
             (e)->{
-                DataPlayer.setCD(cda[list.getSelectedIndex()]);
+                DataPlayer.setData(datas[list.getSelectedIndex()]);
                 transferFocus();
             }
         );
@@ -85,7 +86,7 @@ public class ListPanel extends Panel{
             new MouseAdapter(){
                 public void mouseReleased(MouseEvent e){
                     if(e.getButton()==MouseEvent.BUTTON3&&list.getSelectedIndex()!=-1){
-                        Data cd=cda[list.getSelectedIndex()];
+                        Data cd=datas[list.getSelectedIndex()];
                         if(cd.isSong()){
                             showSongInfo(MouseInfo.getPointerInfo().getLocation(),(SongData)cd);
                         }else{
@@ -99,40 +100,32 @@ public class ListPanel extends Panel{
     }
     
     private void showSongInfo(Point p,SongData cds){
-        hideSongInfo();
+        if(popSong != null){
+            popSong.hide();
+        }
         popSong = new PopSongInfo(p,cds);
         popSong.show();
     }
     private void showListInfo(Point p,ListData cdl){
-        hideListInfo();
+        if(popList != null){
+            popList.hide();
+        }
         popList = new PopListInfo(p,cdl);
         popList.show();
     }
-    private void hideSongInfo(){
-        if(popSong != null){
-            popSong.hide();
-            popSong = null;
-        }
-    }
-    private void hideListInfo(){
-        if(popList != null){
-            popList.hide();
-            popList = null;
-        }
-    }
     
-    class PopSongInfo extends Popup{
+    private class PopSongInfo extends Popup{
         public PopSongInfo(Point p,SongData cds){
             super(ListPanel.this,new PnSongInfo(cds),(int)(p.getX()),(int)(p.getY()));
         }
     }
-    class PopListInfo extends Popup{
+    private class PopListInfo extends Popup{
         public PopListInfo(Point p,ListData cdl){
             super(ListPanel.this,new ListPanelInfo(cdl),(int)(p.getX()),(int)(p.getY()));
         }
     }
     
-    class PnSongInfo extends Panel{
+    private class PnSongInfo extends Panel{
         PnSongInfo(SongData cds){
             setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
             Label name = new Label(cds.getName());
@@ -144,8 +137,12 @@ public class ListPanel extends Panel{
             Button btEdit = new Button("編集");
             btEdit.addActionListener(
                 (e)->{
-                    hideListInfo();
-                    hideSongInfo();
+                    if(popSong != null){
+                        popSong.hide();
+                    }
+                    if(popList != null){
+                        popList.hide();
+                    }
                     new SongDataEditDialog(cds);
                 }
             );
@@ -158,7 +155,7 @@ public class ListPanel extends Panel{
             add(btEdit);
         }
     }
-    class ListPanelInfo extends Panel{
+    private class ListPanelInfo extends Panel{
         ListPanelInfo(ListData cdl){
             setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
             SongData[] cdsa=cdl.getSongs();
@@ -179,16 +176,24 @@ public class ListPanel extends Panel{
             Button editButton = new Button("編集");
             editButton.addActionListener(
                 (e)->{
-                    hideListInfo();
-                    hideSongInfo();
+                    if(popSong != null){
+                        popSong.hide();
+                    }
+                    if(popList != null){
+                        popList.hide();
+                    }
                     new ListDataEditDialog(cdl);
                 }
             );
             Button deleteButton = new Button("削除");
             deleteButton.addActionListener(
                 (e)->{
-                    hideListInfo();
-                    hideSongInfo();
+                    if(popSong != null){
+                        popSong.hide();
+                    }
+                    if(popList != null){
+                        popList.hide();
+                    }
                     DataLibrary.deleteList(cdl.getId());
                 }
             );

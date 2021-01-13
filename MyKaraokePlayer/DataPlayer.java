@@ -3,18 +3,18 @@ import javax.swing.Timer;
 import javax.sound.sampled.*;
 
 public class DataPlayer{
-    static String songFileDirectory="C:/\\Users\\Owner\\Desktop\\Karaokewavs\\";
-    static StringDisplay sDisp;
-    static PlayStateDisplay psDisp;
-    static Thread psdThr;
-    static Timer timer=new Timer(100,(e)->psDisplayUpdate());
-    static Data cd = null;
-    static AudioInputStream ais;
-    static AudioInputStream dais;
-    static AudioFormat af;
-    static Clip clip;
-    static java.util.List<LineListener> listeners=new java.util.ArrayList<>();
-    static int number;//再生中のCDSがCDLの配列のどのインデックスの奴かを指す。0～CDL.size()-1
+    private static final String SONG_FILE_DIRECTORY="C:/\\Users\\Owner\\Desktop\\Karaokewavs\\";
+    private static StringDisplay sDisp;
+    private static PlayStateDisplay psDisp;
+    private static Thread psdThr;
+    private static Timer timer=new Timer(100,(e)->psDisplayUpdate());
+    private static Data cd = null;
+    private static AudioInputStream ais;
+    private static AudioInputStream dais;
+    private static AudioFormat af;
+    private static Clip clip;
+    private static java.util.List<LineListener> listeners=new java.util.ArrayList<>();
+    private static int number;//再生中のCDSがCDLの配列のどのインデックスの奴かを指す。0～CDL.size()-1
     
     public static void setStringDisplay(StringDisplay sDisp){
         DataPlayer.sDisp = sDisp;
@@ -34,13 +34,13 @@ public class DataPlayer{
             )
         );
     }
-    public static void setCD(Data cd){
+    public static void setData(Data cd){
         stop();
         DataPlayer.cd = cd;
         if(cd.isSong()){
             SongData cds=(SongData)cd;
+            sDisp.setString(cds.getName()+" MyKarakePlayer");
             mplay(cds.getFname());
-            sDisp.setString(cd.getName()+" MyKarakePlayer");
         }
         else{
             ListData cdl=(ListData)cd;
@@ -72,7 +72,7 @@ public class DataPlayer{
     }
     private static void mplay(String fname){
         try {
-            AudioInputStream ais = AudioSystem.getAudioInputStream(new File(songFileDirectory,fname));
+            AudioInputStream ais = AudioSystem.getAudioInputStream(new File(SONG_FILE_DIRECTORY,fname));
             AudioFormat baseFormat = ais.getFormat();
             AudioFormat decodedFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED,baseFormat.getSampleRate(),
                                                         16,baseFormat.getChannels(),

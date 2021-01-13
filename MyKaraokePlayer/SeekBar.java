@@ -3,19 +3,19 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class SeekBar extends Panel implements PlayStateDisplay{
-    PlayState state;
-    Label label = new Label("0:00:00");
-    Popup pop;
-    SeekBar(){
+    private PlayState state;
+    private Label label = new Label("0:00:00");
+    private Popup pop;
+    public SeekBar(){
         setBackground(Color.white);
         setFocusable(false);
         label.setSize(55,23);
         addMouseListener(
             new MouseAdapter(){
                 public void mouseReleased(MouseEvent e){
-                    double order = 1.0*(getMousePosition().getX()-5)/(getWidth()-10)*state.maxFrame;
-                    order=order<0?0:state.maxFrame<order?state.maxFrame:order;
-                    DataPlayer.setFramePosition((int)order);
+                    double cursorFrame = 1.0*(getMousePosition().getX()-5)/(getWidth()-10)*state.maxFrame;
+                    cursorFrame=Math.max(Math.min(cursorFrame,state.maxFrame),0);
+                    DataPlayer.setFramePosition((int)cursorFrame);
                 }
                 public void mouseEntered(MouseEvent e){
                     Point p=getLocationOnScreen();
@@ -32,16 +32,16 @@ public class SeekBar extends Panel implements PlayStateDisplay{
             new MouseMotionAdapter(){
                 public void mouseDrugged(MouseEvent e){
                     if(getMousePosition()!=null&&state!=null){
-                       double order = 1.0*(getMousePosition().getX()-5)*state.maxMicro/(getWidth()-10)/1000000;
-                       order=order<0?0:state.maxFrame<order?state.maxFrame:order;
-                       label.setText(secToTime((int)order));
+                       double cursorMicro = 1.0*(getMousePosition().getX()-5)*state.maxMicro/(getWidth()-10)/1000000;
+                       cursorMicro=Math.max(Math.min(cursorMicro,state.maxMicro),0);
+                       label.setText(secToTime((int)cursorMicro));
                     }
                 }
                 public void mouseMoved(MouseEvent e){
                     if(getMousePosition()!=null&&state!=null){
-                       double order = 1.0*(getMousePosition().getX()-5)*state.maxMicro/(getWidth()-10)/1000000;
-                       order=order<0?0:state.maxMicro/1000000.0<order?state.maxMicro/1000000.0:order;
-                       label.setText(secToTime((int)order));
+                       double cursorMicro = 1.0*(getMousePosition().getX()-5)*state.maxMicro/(getWidth()-10)/1000000;
+                       cursorMicro=Math.max(Math.min(cursorMicro,state.maxMicro),0);
+                       label.setText(secToTime((int)cursorMicro));
                     }
                 }
             }

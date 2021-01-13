@@ -1,3 +1,3 @@
-interface StringDisplay{
-  public void setString(String str);
+public interface StringDisplay{
+    public void setString(String str);
 }

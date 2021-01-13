@@ -2,19 +2,19 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class PlayerPanel extends Panel implements PlayStateDisplay{
-    Button btPlay = new Button("||");
-    SeekBar sb = new SeekBar();
-    TimeDisplay td = new TimeDisplay();
-    Button btPrev = new Button("|<");
-    Button btNext = new Button(">|");
-    PlayState state;
+    private Button playButton = new Button("||");
+    private SeekBar seekBar = new SeekBar();
+    private TimeDisplay timeDisplay = new TimeDisplay();
+    private Button previousButton = new Button("|<");
+    private Button nextButton = new Button(">|");
+    private PlayState state;
     
     PlayerPanel(){
         setBackground(Color.gray);
         setLayout(null);
-        add(btPlay);
-        btPlay.setEnabled(false);
-        btPlay.addActionListener(
+        add(playButton);
+        playButton.setEnabled(false);
+        playButton.addActionListener(
             (e)->{
                 if(state.isPlaying){
                     DataPlayer.pause();
@@ -23,7 +23,7 @@ public class PlayerPanel extends Panel implements PlayStateDisplay{
                 }
             }
         );
-        btPlay.addKeyListener(
+        playButton.addKeyListener(
             new KeyAdapter(){
                 public void keyPressed(KeyEvent e){
                     if(e.getKeyCode()==KeyEvent.VK_LEFT){
@@ -34,25 +34,25 @@ public class PlayerPanel extends Panel implements PlayStateDisplay{
                 }
             }
         );
-        add(sb);
-        add(td);
-        add(btPrev);
-        btPrev.setFocusable(false);
-        btPrev.addActionListener(
+        add(seekBar);
+        add(timeDisplay);
+        add(previousButton);
+        previousButton.setFocusable(false);
+        previousButton.addActionListener(
             (e)-> {
                 DataPlayer.prev();
-                if(btPlay.isEnabled()){
-                    btPlay.requestFocusInWindow();
+                if(playButton.isEnabled()){
+                    playButton.requestFocusInWindow();
                 }
             }
         );
-        add(btNext);
-        btNext.setFocusable(false);
-        btNext.addActionListener(
+        add(nextButton);
+        nextButton.setFocusable(false);
+        nextButton.addActionListener(
             (e)->{
                 DataPlayer.next();
-                if(btPlay.isEnabled()){
-                    btPlay.requestFocusInWindow();
+                if(playButton.isEnabled()){
+                    playButton.requestFocusInWindow();
                 }
             }
         );
@@ -60,47 +60,32 @@ public class PlayerPanel extends Panel implements PlayStateDisplay{
     }
     
     public void selfLayout(){
-        btPlay.setBounds(getParent().getInsets().left+5,5,getHeight()-10,getHeight()-10);
+        playButton.setBounds(getParent().getInsets().left+5,5,getHeight()-10,getHeight()-10);
         if(getWidth()>260){
-            btNext.setBounds(getWidth()-getParent().getInsets().right-5-getHeight()+10,5,getHeight()-10,getHeight()-10);
-            btPrev.setBounds(btNext.getX()-getHeight()+10,5,getHeight()-10,getHeight()-10);
-            btNext.setVisible(true);
-            btPrev.setVisible(true);
+            nextButton.setBounds(getWidth()-getParent().getInsets().right-5-getHeight()+10,5,getHeight()-10,getHeight()-10);
+            previousButton.setBounds(nextButton.getX()-getHeight()+10,5,getHeight()-10,getHeight()-10);
+            nextButton.setVisible(true);
+            previousButton.setVisible(true);
         }else{
-            btPrev.setBounds(getWidth()-this.getParent().getInsets().right-5,0,0,0);
-            btNext.setVisible(false);
-            btPrev.setVisible(false);
+            previousButton.setBounds(getWidth()-this.getParent().getInsets().right-5,0,0,0);
+            nextButton.setVisible(false);
+            previousButton.setVisible(false);
         }
-        td.setBounds(btPrev.getX()-67-5,(getHeight()-27)/2,67,27);
-        sb.setBounds(btPlay.getX()+btPlay.getWidth()+5,5,td.getX()-btPlay.getX()-btPlay.getWidth()-10,getHeight() -10);
-        sb.repaint();
-    }
-    public void ke(KeyEvent e){
-        if(e.getKeyCode()==e.VK_LEFT){
-            DataPlayer.shiftSecond(-5);
-        }else if(e.getKeyCode()==e.VK_RIGHT){
-            DataPlayer.shiftSecond(5);
-        }else if(e.getKeyCode()==e.VK_SPACE){
-            if(btPlay.isEnabled()){
-                if(state.isPlaying){
-                    DataPlayer.pause();
-                }else{
-                    DataPlayer.start();
-                }
-            }
-        }
+        timeDisplay.setBounds(previousButton.getX()-67-5,(getHeight()-27)/2,67,27);
+        seekBar.setBounds(playButton.getX()+playButton.getWidth()+5,5,timeDisplay.getX()-playButton.getX()-playButton.getWidth()-10,getHeight() -10);
+        seekBar.repaint();
     }
     public void setPlayState(PlayState state){
         this.state=state;
-        btPlay.setEnabled(true);
+        playButton.setEnabled(true);
         if(state.isPlaying){
-            btPlay.setLabel("||");
+            playButton.setLabel("||");
         }else{
-            btPlay.setLabel(">");
+            playButton.setLabel(">");
         }
-        sb.setPlayState(state);
-        td.setPlayState(state);
-        sb.repaint();
-        td.repaint();
+        seekBar.setPlayState(state);
+        timeDisplay.setPlayState(state);
+        seekBar.repaint();
+        timeDisplay.repaint();
     }
 }

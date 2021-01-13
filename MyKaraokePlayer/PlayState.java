@@ -12,8 +12,6 @@ class PlayState{
         this.microPosition=microPosition;
     }
     public String toString(){
-      return isPlaying+
-      "\n["+framePosition+"/"+maxFrame+"]"+
-      "\n["+microPosition+"/"+maxMicro+"]";
+      return isPlaying+      "\n["+framePosition+"/"+maxFrame+"]\n["+microPosition+"/"+maxMicro+"]";
     }
 }

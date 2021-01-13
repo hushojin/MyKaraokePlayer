@@ -2,15 +2,15 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class MKPMenuBar extends MenuBar {
-    Menu mnNew = new Menu("新規作成");
-    MenuItem miNewSong = new MenuItem("曲(S)",new MenuShortcut(KeyEvent.VK_S, true));
-    MenuItem miNewList = new MenuItem("プレイリスト(L)",new MenuShortcut(KeyEvent.VK_L, true));
+    private Menu createMenu = new Menu("新規作成");
+    private MenuItem SongCreateItem = new MenuItem("曲(S)",new MenuShortcut(KeyEvent.VK_S, true));
+    private MenuItem ListCreateItem = new MenuItem("プレイリスト(L)",new MenuShortcut(KeyEvent.VK_L, true));
     
     MKPMenuBar(){
-        add(mnNew);
-        mnNew.add(miNewSong);
-        miNewSong.addActionListener((e)->new SongDataCreateDialog());
-        mnNew.add(miNewList);
-        miNewList.addActionListener((e)->new ListDataCreateDialog());
+        add(createMenu);
+        createMenu.add(SongCreateItem);
+        SongCreateItem.addActionListener((e)->new SongDataCreateDialog());
+        createMenu.add(ListCreateItem);
+        ListCreateItem.addActionListener((e)->new ListDataCreateDialog());
     }
 }

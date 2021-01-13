@@ -3,7 +3,7 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class ListDataCreateDialog extends Dialog{
-    PopSongInfo popSong;
+    private PopSongInfo popSong;
     ListDataCreateDialog(){
         super((Frame)null,"プレイリスト新規作成",true);
         Label ln = new Label("名前:");
@@ -13,9 +13,9 @@ public class ListDataCreateDialog extends Dialog{
         Button removeButton = new Button("削除>>");
         Button addButton = new Button("<<追加");
         List allSongList = new List();
-        SongData[] allSongs=DataLibrary.getMatchCDSs("");
+        SongData[] allSongs=DataLibrary.getMatchSongs("");
         Button saveButton = new Button("保存");
-        Button canselButton = new Button("キャンセル");
+        Button cancelButton = new Button("キャンセル");
         
         addWindowListener(
             new WindowAdapter(){
@@ -158,9 +158,9 @@ public class ListDataCreateDialog extends Dialog{
         );
         saveButton.setBounds(210,250,70,20);
         
-        add(canselButton);
-        canselButton.addActionListener((e)->setVisible(false));
-        canselButton.setBounds(290,250,70,20);
+        add(cancelButton);
+        cancelButton.addActionListener((e)->setVisible(false));
+        cancelButton.setBounds(290,250,70,20);
         
         setLayout(null);
         setSize(380,290);
@@ -168,7 +168,7 @@ public class ListDataCreateDialog extends Dialog{
         setVisible(true);
     }
     
-    void popupInfo(Point p,SongData cds){
+    private void popupInfo(Point p,SongData cds){
         if(popSong!=null){
             popSong.hide();
             popSong=null;
@@ -177,13 +177,13 @@ public class ListDataCreateDialog extends Dialog{
         popSong.show();
     }
     
-    class PopSongInfo extends Popup{
+    private class PopSongInfo extends Popup{
         public PopSongInfo(Point p,SongData cds){
             super(ListDataCreateDialog.this,new PnSongInfo(cds),(int)(p.getX()),(int)(p.getY()));
         }
     }
     
-    class PnSongInfo extends Panel{
+    private class PnSongInfo extends Panel{
         PnSongInfo(SongData cds){
             setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
             Label name = new Label(cds.getName());

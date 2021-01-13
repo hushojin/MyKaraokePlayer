@@ -2,7 +2,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class SongDataCreateDialog extends Dialog{
-    SongDataCreateDialog(){
+    public SongDataCreateDialog(){
         super((Frame)null,"曲新規作成",true);
         
         Label fnl = new Label("ファイル名:",Label.RIGHT);
@@ -28,7 +28,7 @@ public class SongDataCreateDialog extends Dialog{
         TextField score = new TextField();
         
         Button finish = new Button("保存");
-        Button cansell = new Button("キャンセル");
+        Button cancel = new Button("キャンセル");
         
         addWindowListener(
             new WindowAdapter(){
@@ -98,9 +98,9 @@ public class SongDataCreateDialog extends Dialog{
             DataLibrary.addNewSongData(fname.getText(),name.getText(),Integer.valueOf(grade.getText()),comment.getText(),date.getText(),with.getText(),score.getText());
             setVisible(false);
         });
-        add(cansell);
-        cansell.setBounds(240,250,70,20);
-        cansell.addActionListener((e)->setVisible(false));
+        add(cancel);
+        cancel.setBounds(240,250,70,20);
+        cancel.addActionListener((e)->setVisible(false));
         
         setSize(380,290);
         setResizable(false);

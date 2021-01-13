@@ -1,3 +1,3 @@
-interface PlayStateDisplay{
-  public void setPlayState(PlayState state);
+public interface PlayStateDisplay{
+    public void setPlayState(PlayState state);
 }
