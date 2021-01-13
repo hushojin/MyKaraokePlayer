@@ -49,13 +49,13 @@ public class CDFLibrary{
         }
     }
     
-    public static void addNewPlayListData(String name,int[] cdss){
+    public static void addNewListData(String name,int[] cdss){
         try{
             String sql="INSERT INTO LISTS VALUES (0,'"+escape(name)+"')";
             System.out.println("["+sql+"]");
             PreparedStatement ps=conn.prepareCall(sql);
             ps.executeUpdate();
-            int listid=getPlayListNumber(name);
+            int listid=getListId(name);
             for(int i=1;i<=cdss.length;i++){
                 sql="INSERT INTO LISTSONGS VALUES ('"+listid+"',"+i+","+cdss[i-1]+")";
                 System.out.println("["+sql+"]");
@@ -67,7 +67,7 @@ public class CDFLibrary{
         }
     }
     
-    public static void playListDelete(int id){
+    public static void deleteList(int id){
         try{
             String sql="DELETE FROM LISTS WHERE ID='"+id+"'";
             System.out.println("["+sql+"]");
@@ -78,7 +78,7 @@ public class CDFLibrary{
         }
     }
     
-    public static void playListEdit(int id,String newName,int[] newSongIDs){
+    public static void editList(int id,String newName,int[] newSongIDs){
         try{
             String sql="DELETE FROM LISTSONGS WHERE LISTID="+id;
             System.out.println("["+sql+"]");
@@ -133,9 +133,9 @@ public class CDFLibrary{
         return cdls.toArray(new ChooseDataList[0]);
     }
     public static boolean existsSongFile(String fname){
-        return getSongNumber(fname)!=-1;
+        return getSongId(fname)!=-1;
     }
-    private static int getSongNumber(String fname){
+    private static int getSongId(String fname){
         try{
             String sql="SELECT ID FROM SONGS WHERE FILE='"+escape(fname)+"'";
             System.out.println("["+sql+"]");
@@ -151,9 +151,9 @@ public class CDFLibrary{
         return -1;
     }
     public static boolean existsListName(String lname){
-        return getPlayListNumber(lname)!=-1;
+        return getListId(lname)!=-1;
     }
-    private static int getPlayListNumber(String lname){
+    private static int getListId(String lname){
         try{
             String sql="SELECT ID FROM LISTS WHERE LIST='"+escape(lname)+"'";
             System.out.println("["+sql+"]");
@@ -205,7 +205,7 @@ public class CDFLibrary{
     public static String getListName(int id){
         return getStringValueFromTableById("LIST","LISTS",id);
     }
-    public static ChooseDataSong[] getSongsInList(int id){
+    public static ChooseDataSong[] getListSongs(int id){
         List<ChooseDataSong> list=new ArrayList<>();
         try{
             String sql="SELECT SONGID FROM LISTSONGS WHERE LISTID="+id+" ORDER BY NUM";

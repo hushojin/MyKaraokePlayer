@@ -152,7 +152,7 @@ public class CDLNewer extends Dialog{
                 for(int i=0;i<listSongList.getItemCount();i++){
                     a[i] = listSongs.get(i).getId();
                 }
-                CDFLibrary.addNewPlayListData(tfn.getText(),a);
+                CDFLibrary.addNewListData(tfn.getText(),a);
                 setVisible(false);
             }
         );
@@ -169,7 +169,6 @@ public class CDLNewer extends Dialog{
     }
     
     void popupInfo(Point p,ChooseDataSong cds){
-        System.out.println(cds.getName());
         if(popSong!=null){
             popSong.hide();
             popSong=null;

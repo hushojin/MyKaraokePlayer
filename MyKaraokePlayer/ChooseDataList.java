@@ -15,7 +15,7 @@ public class ChooseDataList extends ChooseData{
     }
     
     public ChooseDataSong[] getSongs(){
-        return CDFLibrary.getSongsInList(id);
+        return CDFLibrary.getListSongs(id);
     }
     
     public boolean isSong(){return false;}

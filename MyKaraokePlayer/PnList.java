@@ -189,7 +189,7 @@ public class PnList extends Panel{
                 (e)->{
                     hideListInfo();
                     hideSongInfo();
-                    CDFLibrary.playListDelete(cdl.getId());
+                    CDFLibrary.deleteList(cdl.getId());
                 }
             );
             add(songList);
