@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
+import datalibrary.*;
 
 public class SongDataEditDialog extends Dialog{
     SongDataEditDialog(DataLibrary library,SongData sd){

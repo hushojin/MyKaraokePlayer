@@ -1,9 +1,11 @@
+package datalibrary;
+
 import java.sql.*;
 import java.util.*;
 
 public class DataLibrary{
     private Connection conn;
-    DataLibrary(){
+    public DataLibrary(){
         try{
             String url="jdbc:mysql://localhost/mkpdb?useUnicode=true&useJDBCCompliantTimezoneShift=true&serverTimezone=UTC";
             String user="mkp";

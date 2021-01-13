@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import datalibrary.*;
 
 public class ListDataCreateDialog extends Dialog{
     private PopSongInfo popSong;
