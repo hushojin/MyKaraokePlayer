@@ -9,8 +9,8 @@ public class MB extends MenuBar {
     MB(){
         add(mnNew);
         mnNew.add(miNewSong);
-        miNewSong.addActionListener((e)->new CDSNewer());
+        miNewSong.addActionListener((e)->new SongDataCreateDialog());
         mnNew.add(miNewList);
-        miNewList.addActionListener((e)->new CDLNewer());
+        miNewList.addActionListener((e)->new ListDataCreateDialog());
     }
 }

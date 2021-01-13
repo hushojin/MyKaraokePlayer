@@ -9,25 +9,25 @@ public class SongData extends Data{
       return id;
     }
     public String getFname(){
-        return CDFLibrary.getSongFile(id);
+        return DataLibrary.getSongFile(id);
     }
     public String getName(){
-        return CDFLibrary.getSongName(id);
+        return DataLibrary.getSongName(id);
     }
     public int getGrade(){
-        return CDFLibrary.getSongEval(id);
+        return DataLibrary.getSongEval(id);
     }
     public String getComment(){
-        return CDFLibrary.getSongComment(id);
+        return DataLibrary.getSongComment(id);
     }
     public String getDate(){
-        return CDFLibrary.getSongDate(id);
+        return DataLibrary.getSongDate(id);
     }
     public String getWith(){
-        return CDFLibrary.getSongWith(id);
+        return DataLibrary.getSongWith(id);
     }
     public String getScore(){
-        return CDFLibrary.getSongScore(id);
+        return DataLibrary.getSongScore(id);
     }
     public boolean isSong(){return true;}
 }

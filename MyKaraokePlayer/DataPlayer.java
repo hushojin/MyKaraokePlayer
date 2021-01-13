@@ -2,7 +2,7 @@ import java.io.*;
 import javax.swing.Timer;
 import javax.sound.sampled.*;
 
-public class CDPlayer{
+public class DataPlayer{
     static String songFileDirectory="C:/\\Users\\Owner\\Desktop\\Karaokewavs\\";
     static StringDisplay sDisp;
     static PlayStateDisplay psDisp;
@@ -17,10 +17,10 @@ public class CDPlayer{
     static int number;//再生中のCDSがCDLの配列のどのインデックスの奴かを指す。0～CDL.size()-1
     
     public static void setStringDisplay(StringDisplay sDisp){
-        CDPlayer.sDisp = sDisp;
+        DataPlayer.sDisp = sDisp;
     }
     public static void setPlayStateDisplay(PlayStateDisplay psDisp){
-        CDPlayer.psDisp = psDisp;
+        DataPlayer.psDisp = psDisp;
     }
     private static void psDisplayUpdate(){
         if(psDisp==null){return;}
@@ -36,7 +36,7 @@ public class CDPlayer{
     }
     public static void setCD(Data cd){
         stop();
-        CDPlayer.cd = cd;
+        DataPlayer.cd = cd;
         if(cd.isSong()){
             SongData cds=(SongData)cd;
             mplay(cds.getFname());
@@ -138,7 +138,7 @@ public class CDPlayer{
             mplay(cdl.getSongs()[number].getFname());
             sDisp.setString((number+1)+"/"+cdl.size()+" "+cdl.getSongs()[number].getName()+" MyKarakePlayer");
         }else{
-            CDPlayer.setFramePosition(0);
+            DataPlayer.setFramePosition(0);
         }
     }
     

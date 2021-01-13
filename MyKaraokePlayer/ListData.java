@@ -8,14 +8,14 @@ public class ListData extends Data{
         return id;
     }
     public String getName(){
-        return CDFLibrary.getListName(id);
+        return DataLibrary.getListName(id);
     }
     public int size(){
-      return CDFLibrary.getListSize(id);
+      return DataLibrary.getListSize(id);
     }
     
     public SongData[] getSongs(){
-        return CDFLibrary.getListSongs(id);
+        return DataLibrary.getListSongs(id);
     }
     
     public boolean isSong(){return false;}

@@ -15,7 +15,7 @@ public class SeekBar extends Panel implements PlayStateDisplay{
                 public void mouseReleased(MouseEvent e){
                     double order = 1.0*(getMousePosition().getX()-5)/(getWidth()-10)*state.maxFrame;
                     order=order<0?0:state.maxFrame<order?state.maxFrame:order;
-                    CDPlayer.setFramePosition((int)order);
+                    DataPlayer.setFramePosition((int)order);
                 }
                 public void mouseEntered(MouseEvent e){
                     Point p=getLocationOnScreen();

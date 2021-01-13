@@ -1,30 +1,31 @@
 import java.awt.*;
 import java.awt.event.*;
 
-public class CDSEditor extends Dialog{
-    CDSEditor(SongData cds){
-        super((Frame)null,"曲編集",true);
+public class SongDataCreateDialog extends Dialog{
+    SongDataCreateDialog(){
+        super((Frame)null,"曲新規作成",true);
         
         Label fnl = new Label("ファイル名:",Label.RIGHT);
-        Label fname = new Label(cds.getFname());
+        Label fname = new Label();
+        Button ref = new Button("...");
         
         Label nl = new Label("曲名",Label.RIGHT);
-        TextField name = new TextField(cds.getName());
+        TextField name = new TextField();
         
         Label gl = new Label("評価:",Label.RIGHT);
-        TextField grade = new TextField(String.valueOf(cds.getGrade()));
+        TextField grade = new TextField();grade.setText("0");
         
         Label cl = new Label("コメント:",Label.RIGHT);
-        TextField comment = new TextField(cds.getComment());
+        TextField comment = new TextField();
         
         Label wl = new Label("同伴:",Label.RIGHT);
-        TextField with = new TextField(cds.getWith());
+        TextField with = new TextField();
         
         Label dl = new Label("日付:",Label.RIGHT);
-        TextField date = new TextField(cds.getDate());
+        TextField date = new TextField();
         
         Label sl = new Label("スコア:",Label.RIGHT);
-        TextField score = new TextField(cds.getScore());
+        TextField score = new TextField();
         
         Button finish = new Button("保存");
         Button cansell = new Button("キャンセル");
@@ -41,6 +42,23 @@ public class CDSEditor extends Dialog{
         fnl.setBounds(20,40,70,20);
         add(fname);
         fname.setBounds(fnl.getX()+fnl.getWidth(),fnl.getY(),200,20);
+        add(ref);
+        ref.setBounds(fname.getX()+fname.getWidth(),fname.getY(),20,20);
+        ref.addActionListener(
+            (e)->{
+                FileDialog fd = new FileDialog(SongDataCreateDialog.this,"ファイル選択",FileDialog.LOAD);
+                fd.setDirectory("C:\\Users\\Owner\\Desktop\\Karaokewavs");
+                fd.setVisible(true);
+                if(fd.getFiles().length<1){return;};
+                fname.setText(fd.getFile());
+                name.setText(fname.getText().substring(0,fname.getText().length()-4));
+                if(!DataLibrary.existsSongFile(fname.getText())){
+                    finish.setEnabled(true);
+                }else{
+                    finish.setEnabled(false);
+                }
+            }
+        );
         
         add(nl);
         nl.setBounds(20,70,70,20);
@@ -75,23 +93,14 @@ public class CDSEditor extends Dialog{
         
         add(finish);
         finish.setBounds(150,250,70,20);
-        finish.addActionListener(
-            new ActionListener(){
-                public void actionPerformed(ActionEvent e){
-                    CDFLibrary.songEdit(cds.getId(),name.getText(),Integer.valueOf(grade.getText()),comment.getText(),date.getText(),with.getText(),score.getText());
-                    setVisible(false);
-                }
-            }
-        );
+        finish.setEnabled(false);
+        finish.addActionListener((e)->{
+            DataLibrary.addNewSongData(fname.getText(),name.getText(),Integer.valueOf(grade.getText()),comment.getText(),date.getText(),with.getText(),score.getText());
+            setVisible(false);
+        });
         add(cansell);
         cansell.setBounds(240,250,70,20);
-        cansell.addActionListener(
-            new ActionListener(){
-                public void actionPerformed(ActionEvent e){
-                    setVisible(false);
-                }
-            }
-        );
+        cansell.addActionListener((e)->setVisible(false));
         
         setSize(380,290);
         setResizable(false);

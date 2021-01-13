@@ -1,7 +1,7 @@
 import java.sql.*;
 import java.util.*;
 
-public class CDFLibrary{
+public class DataLibrary{
     static Connection conn;
     static{
         try{
@@ -12,7 +12,7 @@ public class CDFLibrary{
         }catch(SQLException e){e.printStackTrace();}
     }
     
-    public static void songEdit(int id,String name,int grade,String comment,String date,String with,String score){
+    public static void editSong(int id,String name,int grade,String comment,String date,String with,String score){
         try{
             String sql="UPDATE SONGS SET"+
                 " TITLE='"+escape(name)+"'"+

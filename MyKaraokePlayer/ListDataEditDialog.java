@@ -2,18 +2,19 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class CDLNewer extends Dialog{
+public class ListDataEditDialog extends Dialog{
     PopSongInfo popSong;
-    CDLNewer(){
-        super((Frame)null,"プレイリスト新規作成",true);
+    ListDataEditDialog(ListData cdl){
+        super((Frame)null,"プレイリスト編集",true);
+        String defaultName = cdl.getName();
         Label ln = new Label("名前:");
-        TextField tfn = new TextField();
+        TextField tfn = new TextField(defaultName);
+        java.util.List<SongData> listSongs=new java.util.ArrayList<SongData>();
         List listSongList = new List();
-        java.util.List<SongData> listSongs=new java.util.ArrayList<>();
         Button removeButton = new Button("削除>>");
         Button addButton = new Button("<<追加");
+        SongData[] allSongs=DataLibrary.getMatchCDSs("");
         List allSongList = new List();
-        SongData[] allSongs=CDFLibrary.getMatchCDSs("");
         Button saveButton = new Button("保存");
         Button canselButton = new Button("キャンセル");
         
@@ -24,7 +25,6 @@ public class CDLNewer extends Dialog{
                 }
             }
         );
-        
         addMouseMotionListener(
             new MouseMotionListener(){
                 public void mouseDragged(MouseEvent e){
@@ -49,7 +49,7 @@ public class CDLNewer extends Dialog{
         tfn.addTextListener(
             new TextListener(){
                 public void textValueChanged(TextEvent e){
-                    if( tfn.getText().isEmpty() || listSongList.getItemCount()==0 || CDFLibrary.existsListName(tfn.getText()) ){
+                    if( !defaultName.equals(tfn.getText()) && (tfn.getText().isEmpty() || listSongList.getItemCount()==0 || DataLibrary.existsListName(tfn.getText()) ) ){
                         saveButton.setEnabled(false);
                     }else{
                         saveButton.setEnabled(true);
@@ -60,12 +60,17 @@ public class CDLNewer extends Dialog{
         tfn.setBounds(50,40,95,20);
         
         add(listSongList);
+        for(SongData cds:cdl.getSongs()){
+            listSongList.add(cds.getName());
+            listSongs.add(cds);
+        }
         listSongList.addItemListener(
             new ItemListener(){
                 public void itemStateChanged(ItemEvent e){
                     if(e.getStateChange()==ItemEvent.SELECTED){
                         removeButton.setEnabled(true);
-                    }else if(e.getStateChange()==ItemEvent.DESELECTED){
+                    }
+                    else if(e.getStateChange()==ItemEvent.DESELECTED){
                         removeButton.setEnabled(false);
                     }
                 }
@@ -95,8 +100,7 @@ public class CDLNewer extends Dialog{
                 if(listSongList.getItemCount()==0){
                     removeButton.setEnabled(false);
                     saveButton.setEnabled(false);
-                }
-                else{
+                }else{
                     listSongList.select( index<listSongList.getItemCount() ? index : index-1 );
                 }
             }
@@ -109,7 +113,7 @@ public class CDLNewer extends Dialog{
             (e)->{
                 listSongList.add(allSongList.getSelectedItem());
                 listSongs.add(allSongs[allSongList.getSelectedIndex()]);
-                if( !tfn.getText().isEmpty() && !CDFLibrary.existsListName(tfn.getText())){
+                if( defaultName.equals(tfn.getText()) || (!tfn.getText().isEmpty()&&!DataLibrary.existsListName(tfn.getText())) ){
                     saveButton.setEnabled(true);
                 }
             }
@@ -121,12 +125,14 @@ public class CDLNewer extends Dialog{
             allSongList.add(cds.getName());
         }
         allSongList.addItemListener(
-            (e)->{
-                if(e.getStateChange()==ItemEvent.SELECTED){
-                    addButton.setEnabled(true);
-                }
-                else if(e.getStateChange()==ItemEvent.DESELECTED){
-                    addButton.setEnabled(false);
+            new ItemListener(){
+                public void itemStateChanged(ItemEvent e){
+                    if(e.getStateChange()==ItemEvent.SELECTED){
+                        addButton.setEnabled(true);
+                    }
+                    else if(e.getStateChange()==ItemEvent.DESELECTED){
+                        addButton.setEnabled(false);
+                    }
                 }
             }
         );
@@ -145,14 +151,13 @@ public class CDLNewer extends Dialog{
         allSongList.setBounds(240,70,125,160);
         
         add(saveButton);
-        saveButton.setEnabled(false);
         saveButton.addActionListener(
             (e)->{
                 int a[] = new int[listSongList.getItemCount()];
                 for(int i=0;i<listSongList.getItemCount();i++){
                     a[i] = listSongs.get(i).getId();
                 }
-                CDFLibrary.addNewListData(tfn.getText(),a);
+                DataLibrary.editList(cdl.getId(),tfn.getText(),a);
                 setVisible(false);
             }
         );
@@ -168,6 +173,7 @@ public class CDLNewer extends Dialog{
         setVisible(true);
     }
     
+    
     void popupInfo(Point p,SongData cds){
         if(popSong!=null){
             popSong.hide();
@@ -179,7 +185,7 @@ public class CDLNewer extends Dialog{
     
     class PopSongInfo extends Popup{
         public PopSongInfo(Point p,SongData cds){
-            super(CDLNewer.this,new PnSongInfo(cds),(int)(p.getX()),(int)(p.getY()));
+            super(ListDataEditDialog.this,new PnSongInfo(cds),(int)(p.getX()),(int)(p.getY()));
         }
     }
     

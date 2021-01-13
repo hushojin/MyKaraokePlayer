@@ -17,9 +17,9 @@ public class PnPlayer extends Panel implements PlayStateDisplay{
         btPlay.addActionListener(
             (e)->{
                 if(state.isPlaying){
-                    CDPlayer.pause();
+                    DataPlayer.pause();
                 }else{
-                    CDPlayer.start();
+                    DataPlayer.start();
                 }
             }
         );
@@ -27,9 +27,9 @@ public class PnPlayer extends Panel implements PlayStateDisplay{
             new KeyAdapter(){
                 public void keyPressed(KeyEvent e){
                     if(e.getKeyCode()==KeyEvent.VK_LEFT){
-                        CDPlayer.shiftSecond(-5);
+                        DataPlayer.shiftSecond(-5);
                     }else if(e.getKeyCode()==KeyEvent.VK_RIGHT){
-                        CDPlayer.shiftSecond(5);
+                        DataPlayer.shiftSecond(5);
                     }
                 }
             }
@@ -40,7 +40,7 @@ public class PnPlayer extends Panel implements PlayStateDisplay{
         btPrev.setFocusable(false);
         btPrev.addActionListener(
             (e)-> {
-                CDPlayer.prev();
+                DataPlayer.prev();
                 if(btPlay.isEnabled()){
                     btPlay.requestFocusInWindow();
                 }
@@ -50,13 +50,13 @@ public class PnPlayer extends Panel implements PlayStateDisplay{
         btNext.setFocusable(false);
         btNext.addActionListener(
             (e)->{
-                CDPlayer.next();
+                DataPlayer.next();
                 if(btPlay.isEnabled()){
                     btPlay.requestFocusInWindow();
                 }
             }
         );
-        CDPlayer.setPlayStateDisplay(this);
+        DataPlayer.setPlayStateDisplay(this);
     }
     
     public void selfLayout(){
@@ -77,15 +77,15 @@ public class PnPlayer extends Panel implements PlayStateDisplay{
     }
     public void ke(KeyEvent e){
         if(e.getKeyCode()==e.VK_LEFT){
-            CDPlayer.shiftSecond(-5);
+            DataPlayer.shiftSecond(-5);
         }else if(e.getKeyCode()==e.VK_RIGHT){
-            CDPlayer.shiftSecond(5);
+            DataPlayer.shiftSecond(5);
         }else if(e.getKeyCode()==e.VK_SPACE){
             if(btPlay.isEnabled()){
                 if(state.isPlaying){
-                    CDPlayer.pause();
+                    DataPlayer.pause();
                 }else{
-                    CDPlayer.start();
+                    DataPlayer.start();
                 }
             }
         }

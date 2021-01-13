@@ -35,7 +35,7 @@ public class MKPWindow extends Frame implements StringDisplay{
           setIconImage(javax.imageio.ImageIO.read(new File("MKPicon1.png")));
         }catch(IOException e){}
         
-        CDPlayer.setStringDisplay(this);
+        DataPlayer.setStringDisplay(this);
         setVisible(true);
     }
     

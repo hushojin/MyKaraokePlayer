@@ -17,7 +17,7 @@ public class PnList extends Panel{
     PnList(){
         setLayout(null);
         setBackground(Color.black);
-        cda=CDFLibrary.getMatchCDSs("");
+        cda=DataLibrary.getMatchCDSs("");
         list=createListFrom(cda);
         add(list);
         searchField.addTextListener((e)->update(searchField.getText()));
@@ -59,9 +59,9 @@ public class PnList extends Panel{
     }
     void update(String searchField,boolean isSong){
         if(isSong){
-            cda=CDFLibrary.getMatchCDSs(searchField);
+            cda=DataLibrary.getMatchCDSs(searchField);
         }else{
-            cda=CDFLibrary.getMatchCDLs(searchField);
+            cda=DataLibrary.getMatchCDLs(searchField);
         }
         List l=createListFrom(cda);
         remove(list);
@@ -77,7 +77,7 @@ public class PnList extends Panel{
         }
         res.addActionListener(
             (e)->{
-                CDPlayer.setCD(cda[list.getSelectedIndex()]);
+                DataPlayer.setCD(cda[list.getSelectedIndex()]);
                 transferFocus();
             }
         );
@@ -146,7 +146,7 @@ public class PnList extends Panel{
                 (e)->{
                     hideListInfo();
                     hideSongInfo();
-                    new CDSEditor(cds);
+                    new SongDataEditDialog(cds);
                 }
             );
             add(name);
@@ -181,7 +181,7 @@ public class PnList extends Panel{
                 (e)->{
                     hideListInfo();
                     hideSongInfo();
-                    new CDLEditor(cdl);
+                    new ListDataEditDialog(cdl);
                 }
             );
             Button deleteButton = new Button("íœ");
@@ -189,7 +189,7 @@ public class PnList extends Panel{
                 (e)->{
                     hideListInfo();
                     hideSongInfo();
-                    CDFLibrary.deleteList(cdl.getId());
+                    DataLibrary.deleteList(cdl.getId());
                 }
             );
             add(songList);
