@@ -6,11 +6,11 @@ public class MKPMenuBar extends MenuBar {
     private MenuItem SongCreateItem = new MenuItem("曲(S)",new MenuShortcut(KeyEvent.VK_S, true));
     private MenuItem ListCreateItem = new MenuItem("プレイリスト(L)",new MenuShortcut(KeyEvent.VK_L, true));
     
-    MKPMenuBar(){
+    MKPMenuBar(DataLibrary library){
         add(createMenu);
         createMenu.add(SongCreateItem);
-        SongCreateItem.addActionListener((e)->new SongDataCreateDialog());
+        SongCreateItem.addActionListener((e)->new SongDataCreateDialog(library));
         createMenu.add(ListCreateItem);
-        ListCreateItem.addActionListener((e)->new ListDataCreateDialog());
+        ListCreateItem.addActionListener((e)->new ListDataCreateDialog(library));
     }
 }

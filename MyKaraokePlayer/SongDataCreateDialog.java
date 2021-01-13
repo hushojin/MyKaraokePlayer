@@ -2,7 +2,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class SongDataCreateDialog extends Dialog{
-    public SongDataCreateDialog(){
+    public SongDataCreateDialog(DataLibrary library){
         super((Frame)null,"曲新規作成",true);
         
         Label fnl = new Label("ファイル名:",Label.RIGHT);
@@ -52,7 +52,7 @@ public class SongDataCreateDialog extends Dialog{
                 if(fd.getFiles().length<1){return;};
                 fname.setText(fd.getFile());
                 name.setText(fname.getText().substring(0,fname.getText().length()-4));
-                if(!DataLibrary.existsSongFile(fname.getText())){
+                if(!library.existsSongFile(fname.getText())){
                     finish.setEnabled(true);
                 }else{
                     finish.setEnabled(false);
@@ -95,7 +95,7 @@ public class SongDataCreateDialog extends Dialog{
         finish.setBounds(150,250,70,20);
         finish.setEnabled(false);
         finish.addActionListener((e)->{
-            DataLibrary.addNewSongData(fname.getText(),name.getText(),Integer.valueOf(grade.getText()),comment.getText(),date.getText(),with.getText(),score.getText());
+            library.addNewSongData(fname.getText(),name.getText(),Integer.valueOf(grade.getText()),comment.getText(),date.getText(),with.getText(),score.getText());
             setVisible(false);
         });
         add(cancel);

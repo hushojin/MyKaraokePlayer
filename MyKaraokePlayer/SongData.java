@@ -1,33 +1,35 @@
 public class SongData extends Data{
+    private final DataLibrary library;
     private final int id;
     
-    SongData(int id){
-        this.id=id;
+    SongData(DataLibrary library,int id){
+        this.library=library;
+        this.id = id;
     }
     
     public int getId(){
       return id;
     }
     public String getFname(){
-        return DataLibrary.getSongFile(id);
+        return library.getSongFile(id);
     }
     public String getName(){
-        return DataLibrary.getSongName(id);
+        return library.getSongName(id);
     }
     public int getGrade(){
-        return DataLibrary.getSongEval(id);
+        return library.getSongEval(id);
     }
     public String getComment(){
-        return DataLibrary.getSongComment(id);
+        return library.getSongComment(id);
     }
     public String getDate(){
-        return DataLibrary.getSongDate(id);
+        return library.getSongDate(id);
     }
     public String getWith(){
-        return DataLibrary.getSongWith(id);
+        return library.getSongWith(id);
     }
     public String getScore(){
-        return DataLibrary.getSongScore(id);
+        return library.getSongScore(id);
     }
     public boolean isSong(){return true;}
 }

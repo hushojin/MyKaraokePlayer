@@ -6,8 +6,9 @@ public class MKPWindow extends Frame implements StringDisplay{
     private ListPanel listPanel;
     private PlayerPanel playerPanel;
     MKPWindow() {
+        DataLibrary library = new DataLibrary();
         DataPlayer player = new DataPlayer();
-        listPanel = new ListPanel(player);
+        listPanel = new ListPanel(player,library);
         playerPanel = new PlayerPanel(player);
         player.setStringDisplay(this);
         
@@ -15,7 +16,7 @@ public class MKPWindow extends Frame implements StringDisplay{
         setTitle("MyKaraokePlayer");
         setSize(400, 350);
         setMinimumSize(new Dimension(200,99));
-        setMenuBar(new MKPMenuBar());
+        setMenuBar(new MKPMenuBar(library));
         add(listPanel);
         add(playerPanel);
         addWindowListener(

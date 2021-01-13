@@ -1,6 +1,8 @@
 public class ListData extends Data{
+    private final DataLibrary library;
     private final int id;
-    ListData(int id){
+    ListData(DataLibrary library,int id){
+        this.library=library;
         this.id = id;
     }
     
@@ -8,14 +10,14 @@ public class ListData extends Data{
         return id;
     }
     public String getName(){
-        return DataLibrary.getListName(id);
+        return library.getListName(id);
     }
     public int size(){
-      return DataLibrary.getListSize(id);
+      return library.getListSize(id);
     }
     
     public SongData[] getSongs(){
-        return DataLibrary.getListSongs(id);
+        return library.getListSongs(id);
     }
     
     public boolean isSong(){return false;}

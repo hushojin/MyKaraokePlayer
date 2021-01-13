@@ -13,12 +13,14 @@ public class ListPanel extends Panel{
     private PopListInfo popList;
     private PopSongInfo popSong;
     private DataPlayer player;
+    private DataLibrary library;
     
-    public ListPanel(DataPlayer player){
+    public ListPanel(DataPlayer player,DataLibrary library){
         this.player=player;
+        this.library=library;
         setLayout(null);
         setBackground(Color.black);
-        datas=DataLibrary.getMatchSongs("");
+        datas=library.getMatchSongs("");
         list=createListFrom(datas);
         add(list);
         searchField.addTextListener((e)->update());
@@ -62,9 +64,9 @@ public class ListPanel extends Panel{
     
     private void update(){
         if(songCheckbox.getState()){
-            datas=DataLibrary.getMatchSongs(searchField.getText());
+            datas=library.getMatchSongs(searchField.getText());
         }else{
-            datas=DataLibrary.getMatchLists(searchField.getText());
+            datas=library.getMatchLists(searchField.getText());
         }
         List l=createListFrom(datas);
         remove(list);
@@ -145,7 +147,7 @@ public class ListPanel extends Panel{
                     if(popList != null){
                         popList.hide();
                     }
-                    new SongDataEditDialog(cds);
+                    new SongDataEditDialog(library,cds);
                 }
             );
             add(name);
@@ -184,7 +186,7 @@ public class ListPanel extends Panel{
                     if(popList != null){
                         popList.hide();
                     }
-                    new ListDataEditDialog(cdl);
+                    new ListDataEditDialog(library,cdl);
                 }
             );
             Button deleteButton = new Button("çÌèú");
@@ -196,7 +198,7 @@ public class ListPanel extends Panel{
                     if(popList != null){
                         popList.hide();
                     }
-                    DataLibrary.deleteList(cdl.getId());
+                    library.deleteList(cdl.getId());
                 }
             );
             add(songList);

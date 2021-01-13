@@ -4,7 +4,7 @@ import javax.swing.*;
 
 public class ListDataCreateDialog extends Dialog{
     private PopSongInfo popSong;
-    ListDataCreateDialog(){
+    ListDataCreateDialog(DataLibrary library){
         super((Frame)null,"プレイリスト新規作成",true);
         Label ln = new Label("名前:");
         TextField tfn = new TextField();
@@ -13,7 +13,7 @@ public class ListDataCreateDialog extends Dialog{
         Button removeButton = new Button("削除>>");
         Button addButton = new Button("<<追加");
         List allSongList = new List();
-        SongData[] allSongs=DataLibrary.getMatchSongs("");
+        SongData[] allSongs=library.getMatchSongs("");
         Button saveButton = new Button("保存");
         Button cancelButton = new Button("キャンセル");
         
@@ -49,7 +49,7 @@ public class ListDataCreateDialog extends Dialog{
         tfn.addTextListener(
             new TextListener(){
                 public void textValueChanged(TextEvent e){
-                    if( tfn.getText().isEmpty() || listSongList.getItemCount()==0 || DataLibrary.existsListName(tfn.getText()) ){
+                    if( tfn.getText().isEmpty() || listSongList.getItemCount()==0 || library.existsListName(tfn.getText()) ){
                         saveButton.setEnabled(false);
                     }else{
                         saveButton.setEnabled(true);
@@ -109,7 +109,7 @@ public class ListDataCreateDialog extends Dialog{
             (e)->{
                 listSongList.add(allSongList.getSelectedItem());
                 listSongs.add(allSongs[allSongList.getSelectedIndex()]);
-                if( !tfn.getText().isEmpty() && !DataLibrary.existsListName(tfn.getText())){
+                if( !tfn.getText().isEmpty() && !library.existsListName(tfn.getText())){
                     saveButton.setEnabled(true);
                 }
             }
@@ -152,7 +152,7 @@ public class ListDataCreateDialog extends Dialog{
                 for(int i=0;i<listSongList.getItemCount();i++){
                     a[i] = listSongs.get(i).getId();
                 }
-                DataLibrary.addNewListData(tfn.getText(),a);
+                library.addNewListData(tfn.getText(),a);
                 setVisible(false);
             }
         );

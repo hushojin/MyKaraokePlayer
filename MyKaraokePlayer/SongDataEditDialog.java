@@ -2,7 +2,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class SongDataEditDialog extends Dialog{
-    SongDataEditDialog(SongData sd){
+    SongDataEditDialog(DataLibrary library,SongData sd){
         super((Frame)null,"曲編集",true);
         
         Label fnl = new Label("ファイル名:",Label.RIGHT);
@@ -78,7 +78,7 @@ public class SongDataEditDialog extends Dialog{
         finish.addActionListener(
             new ActionListener(){
                 public void actionPerformed(ActionEvent e){
-                    DataLibrary.editSong(sd.getId(),name.getText(),Integer.valueOf(grade.getText()),comment.getText(),date.getText(),with.getText(),score.getText());
+                    library.editSong(sd.getId(),name.getText(),Integer.valueOf(grade.getText()),comment.getText(),date.getText(),with.getText(),score.getText());
                     setVisible(false);
                 }
             }

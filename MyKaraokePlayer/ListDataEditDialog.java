@@ -4,7 +4,7 @@ import javax.swing.*;
 
 public class ListDataEditDialog extends Dialog{
     private PopSongInfo popSong;
-    public ListDataEditDialog(ListData cdl){
+    public ListDataEditDialog(DataLibrary library,ListData cdl){
         super((Frame)null,"プレイリスト編集",true);
         String defaultName = cdl.getName();
         Label ln = new Label("名前:");
@@ -13,7 +13,7 @@ public class ListDataEditDialog extends Dialog{
         List listSongList = new List();
         Button removeButton = new Button("削除>>");
         Button addButton = new Button("<<追加");
-        SongData[] allSongs=DataLibrary.getMatchSongs("");
+        SongData[] allSongs=library.getMatchSongs("");
         List allSongList = new List();
         Button saveButton = new Button("保存");
         Button cancelButton = new Button("キャンセル");
@@ -49,7 +49,7 @@ public class ListDataEditDialog extends Dialog{
         tfn.addTextListener(
             new TextListener(){
                 public void textValueChanged(TextEvent e){
-                    if( !defaultName.equals(tfn.getText()) && (tfn.getText().isEmpty() || listSongList.getItemCount()==0 || DataLibrary.existsListName(tfn.getText()) ) ){
+                    if( !defaultName.equals(tfn.getText()) && (tfn.getText().isEmpty() || listSongList.getItemCount()==0 || library.existsListName(tfn.getText()) ) ){
                         saveButton.setEnabled(false);
                     }else{
                         saveButton.setEnabled(true);
@@ -113,7 +113,7 @@ public class ListDataEditDialog extends Dialog{
             (e)->{
                 listSongList.add(allSongList.getSelectedItem());
                 listSongs.add(allSongs[allSongList.getSelectedIndex()]);
-                if( defaultName.equals(tfn.getText()) || (!tfn.getText().isEmpty()&&!DataLibrary.existsListName(tfn.getText())) ){
+                if( defaultName.equals(tfn.getText()) || (!tfn.getText().isEmpty()&&!library.existsListName(tfn.getText())) ){
                     saveButton.setEnabled(true);
                 }
             }
@@ -157,7 +157,7 @@ public class ListDataEditDialog extends Dialog{
                 for(int i=0;i<listSongList.getItemCount();i++){
                     a[i] = listSongs.get(i).getId();
                 }
-                DataLibrary.editList(cdl.getId(),tfn.getText(),a);
+                library.editList(cdl.getId(),tfn.getText(),a);
                 setVisible(false);
             }
         );
