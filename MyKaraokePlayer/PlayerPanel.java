@@ -1,7 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
 
-public class PnPlayer extends Panel implements PlayStateDisplay{
+public class PlayerPanel extends Panel implements PlayStateDisplay{
     Button btPlay = new Button("||");
     SeekBar sb = new SeekBar();
     TimeDisplay td = new TimeDisplay();
@@ -9,7 +9,7 @@ public class PnPlayer extends Panel implements PlayStateDisplay{
     Button btNext = new Button(">|");
     PlayState state;
     
-    PnPlayer(){
+    PlayerPanel(){
         setBackground(Color.gray);
         setLayout(null);
         add(btPlay);

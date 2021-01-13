@@ -2,7 +2,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class PnList extends Panel{
+public class ListPanel extends Panel{
     Data[] cda;
     TextField searchField=new TextField();
     Panel pnSwitch = new Panel(null);
@@ -14,7 +14,7 @@ public class PnList extends Panel{
     PopListInfo popList;
     PopSongInfo popSong;
     
-    PnList(){
+    ListPanel(){
         setLayout(null);
         setBackground(Color.black);
         cda=DataLibrary.getMatchCDSs("");
@@ -123,12 +123,12 @@ public class PnList extends Panel{
     
     class PopSongInfo extends Popup{
         public PopSongInfo(Point p,SongData cds){
-            super(PnList.this,new PnSongInfo(cds),(int)(p.getX()),(int)(p.getY()));
+            super(ListPanel.this,new PnSongInfo(cds),(int)(p.getX()),(int)(p.getY()));
         }
     }
     class PopListInfo extends Popup{
         public PopListInfo(Point p,ListData cdl){
-            super(PnList.this,new PnListInfo(cdl),(int)(p.getX()),(int)(p.getY()));
+            super(ListPanel.this,new ListPanelInfo(cdl),(int)(p.getX()),(int)(p.getY()));
         }
     }
     
@@ -158,8 +158,8 @@ public class PnList extends Panel{
             add(btEdit);
         }
     }
-    class PnListInfo extends Panel{
-        PnListInfo(ListData cdl){
+    class ListPanelInfo extends Panel{
+        ListPanelInfo(ListData cdl){
             setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
             SongData[] cdsa=cdl.getSongs();
             List songList = new List(cdl.size(),false);

@@ -3,18 +3,18 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class MKPWindow extends Frame implements StringDisplay{
-    PnList pnList;
-    PnPlayer pnPlayer;
+    ListPanel pnList;
+    PlayerPanel pnPlayer;
     MKPWindow() {
-        pnList = new PnList();
+        pnList = new ListPanel();
         pnList.update("",true);
-        pnPlayer = new PnPlayer();
+        pnPlayer = new PlayerPanel();
 
         setLayout(null);
         setTitle("MyKaraokePlayer");
         setSize(400, 350);
         setMinimumSize(new Dimension(200,99));
-        setMenuBar(new MB());
+        setMenuBar(new MKPMenuBar());
         add(pnList);
         add(pnPlayer);
         addWindowListener(
