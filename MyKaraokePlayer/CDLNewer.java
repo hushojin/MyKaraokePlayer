@@ -9,11 +9,11 @@ public class CDLNewer extends Dialog{
         Label ln = new Label("–¼‘O:");
         TextField tfn = new TextField();
         List listSongList = new List();
-        java.util.List<ChooseDataSong> listSongs=new java.util.ArrayList<>();
+        java.util.List<SongData> listSongs=new java.util.ArrayList<>();
         Button removeButton = new Button("íœ>>");
         Button addButton = new Button("<<’Ç‰Á");
         List allSongList = new List();
-        ChooseDataSong[] allSongs=CDFLibrary.getMatchCDSs("");
+        SongData[] allSongs=CDFLibrary.getMatchCDSs("");
         Button saveButton = new Button("•Û‘¶");
         Button canselButton = new Button("ƒLƒƒƒ“ƒZƒ‹");
         
@@ -117,7 +117,7 @@ public class CDLNewer extends Dialog{
         addButton.setBounds(155,110,70,20);
         
         add(allSongList);
-        for(ChooseDataSong cds:allSongs){
+        for(SongData cds:allSongs){
             allSongList.add(cds.getName());
         }
         allSongList.addItemListener(
@@ -168,7 +168,7 @@ public class CDLNewer extends Dialog{
         setVisible(true);
     }
     
-    void popupInfo(Point p,ChooseDataSong cds){
+    void popupInfo(Point p,SongData cds){
         if(popSong!=null){
             popSong.hide();
             popSong=null;
@@ -178,13 +178,13 @@ public class CDLNewer extends Dialog{
     }
     
     class PopSongInfo extends Popup{
-        public PopSongInfo(Point p,ChooseDataSong cds){
+        public PopSongInfo(Point p,SongData cds){
             super(CDLNewer.this,new PnSongInfo(cds),(int)(p.getX()),(int)(p.getY()));
         }
     }
     
     class PnSongInfo extends Panel{
-        PnSongInfo(ChooseDataSong cds){
+        PnSongInfo(SongData cds){
             setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
             Label name = new Label(cds.getName());
             Label grade = new Label(String.valueOf(cds.getGrade()));

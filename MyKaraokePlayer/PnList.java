@@ -3,7 +3,7 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class PnList extends Panel{
-    ChooseData[] cda;
+    Data[] cda;
     TextField searchField=new TextField();
     Panel pnSwitch = new Panel(null);
     CheckboxGroup cbg = new CheckboxGroup();
@@ -70,9 +70,9 @@ public class PnList extends Panel{
         selfLayout();
     }
     
-    private List createListFrom(ChooseData[] cda){
+    private List createListFrom(Data[] cda){
         List res=new List();
-        for(ChooseData cd:cda){
+        for(Data cd:cda){
             res.add(cd.getName());
         }
         res.addActionListener(
@@ -85,11 +85,11 @@ public class PnList extends Panel{
             new MouseAdapter(){
                 public void mouseReleased(MouseEvent e){
                     if(e.getButton()==MouseEvent.BUTTON3&&list.getSelectedIndex()!=-1){
-                        ChooseData cd=cda[list.getSelectedIndex()];
+                        Data cd=cda[list.getSelectedIndex()];
                         if(cd.isSong()){
-                            showSongInfo(MouseInfo.getPointerInfo().getLocation(),(ChooseDataSong)cd);
+                            showSongInfo(MouseInfo.getPointerInfo().getLocation(),(SongData)cd);
                         }else{
-                            showListInfo(MouseInfo.getPointerInfo().getLocation(),(ChooseDataList)cd);
+                            showListInfo(MouseInfo.getPointerInfo().getLocation(),(ListData)cd);
                         }
                     }
                 }
@@ -98,12 +98,12 @@ public class PnList extends Panel{
         return res;
     }
     
-    private void showSongInfo(Point p,ChooseDataSong cds){
+    private void showSongInfo(Point p,SongData cds){
         hideSongInfo();
         popSong = new PopSongInfo(p,cds);
         popSong.show();
     }
-    private void showListInfo(Point p,ChooseDataList cdl){
+    private void showListInfo(Point p,ListData cdl){
         hideListInfo();
         popList = new PopListInfo(p,cdl);
         popList.show();
@@ -122,18 +122,18 @@ public class PnList extends Panel{
     }
     
     class PopSongInfo extends Popup{
-        public PopSongInfo(Point p,ChooseDataSong cds){
+        public PopSongInfo(Point p,SongData cds){
             super(PnList.this,new PnSongInfo(cds),(int)(p.getX()),(int)(p.getY()));
         }
     }
     class PopListInfo extends Popup{
-        public PopListInfo(Point p,ChooseDataList cdl){
+        public PopListInfo(Point p,ListData cdl){
             super(PnList.this,new PnListInfo(cdl),(int)(p.getX()),(int)(p.getY()));
         }
     }
     
     class PnSongInfo extends Panel{
-        PnSongInfo(ChooseDataSong cds){
+        PnSongInfo(SongData cds){
             setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
             Label name = new Label(cds.getName());
             Label grade = new Label(String.valueOf(cds.getGrade()));
@@ -159,21 +159,21 @@ public class PnList extends Panel{
         }
     }
     class PnListInfo extends Panel{
-        PnListInfo(ChooseDataList cdl){
+        PnListInfo(ListData cdl){
             setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
-            ChooseDataSong[] cdsa=cdl.getSongs();
+            SongData[] cdsa=cdl.getSongs();
             List songList = new List(cdl.size(),false);
             songList.addMouseListener(
                 new MouseAdapter(){
                     public void mouseReleased(MouseEvent e){
                         if(e.getButton()==MouseEvent.BUTTON3&&songList.getSelectedIndex()!=-1){
-                            ChooseDataSong cds=cdsa[songList.getSelectedIndex()];
+                            SongData cds=cdsa[songList.getSelectedIndex()];
                             showSongInfo(MouseInfo.getPointerInfo().getLocation(),cds);
                         }
                     }
                 }
             );
-            for(ChooseDataSong cds:cdsa){
+            for(SongData cds:cdsa){
                 songList.add(cds.getFname());
             }
             Button editButton = new Button("ï“èW");

@@ -8,7 +8,7 @@ public class CDPlayer{
     static PlayStateDisplay psDisp;
     static Thread psdThr;
     static Timer timer=new Timer(100,(e)->psDisplayUpdate());
-    static ChooseData cd = null;
+    static Data cd = null;
     static AudioInputStream ais;
     static AudioInputStream dais;
     static AudioFormat af;
@@ -34,22 +34,22 @@ public class CDPlayer{
             )
         );
     }
-    public static void setCD(ChooseData cd){
+    public static void setCD(Data cd){
         stop();
         CDPlayer.cd = cd;
         if(cd.isSong()){
-            ChooseDataSong cds=(ChooseDataSong)cd;
+            SongData cds=(SongData)cd;
             mplay(cds.getFname());
             sDisp.setString(cd.getName()+" MyKarakePlayer");
         }
         else{
-            ChooseDataList cdl=(ChooseDataList)cd;
+            ListData cdl=(ListData)cd;
             number = 0;
             if(cdl.size()<1){
                 sDisp.setString("0/0 MyKarakePlayer");
                 return;
             }
-            ChooseDataSong cds=cdl.getSongs()[number];
+            SongData cds=cdl.getSongs()[number];
             mplay(cds.getFname());
             sDisp.setString((number+1)+"/"+cdl.size()+" "+cds.getName()+" MyKarakePlayer");
         }
@@ -122,8 +122,8 @@ public class CDPlayer{
         }
     }
     public static void next(){
-        if( !cd.isSong() && number+1 < ((ChooseDataList)cd).size() ){
-            ChooseDataList cdl=(ChooseDataList)cd;
+        if( !cd.isSong() && number+1 < ((ListData)cd).size() ){
+            ListData cdl=(ListData)cd;
             stop();
             number++;
             mplay(cdl.getSongs()[number].getFname());
@@ -132,7 +132,7 @@ public class CDPlayer{
     }
     public static void prev(){
         if(!cd.isSong() && 1<= number && clip.getMicrosecondPosition() < 2000000L){
-            ChooseDataList cdl=(ChooseDataList)cd;
+            ListData cdl=(ListData)cd;
             stop();
             number--;
             mplay(cdl.getSongs()[number].getFname());

@@ -1,7 +1,7 @@
-public class ChooseDataSong extends ChooseData{
+public class SongData extends Data{
     final int id;
     
-    ChooseDataSong(int id){
+    SongData(int id){
         this.id=id;
     }
     

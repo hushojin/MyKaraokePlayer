@@ -99,8 +99,8 @@ public class CDFLibrary{
         }
     }
     
-    public static ChooseDataSong[] getMatchCDSs(String s){
-        List<ChooseDataSong> cdss=new ArrayList<>();
+    public static SongData[] getMatchCDSs(String s){
+        List<SongData> cdss=new ArrayList<>();
         try{
             String sql="SELECT ID FROM SONGS WHERE TITLE LIKE '%"+escapeForLike(s)+"%'";
             System.out.println("["+sql+"]");
@@ -108,16 +108,16 @@ public class CDFLibrary{
             ResultSet rs=ps.executeQuery(); 
             while(rs.next()){
                 int id=rs.getInt(1);
-                cdss.add(new ChooseDataSong(id));
+                cdss.add(new SongData(id));
             }
         }catch(SQLException e){
             e.printStackTrace();
         }
-        return cdss.toArray(new ChooseDataSong[0]);
+        return cdss.toArray(new SongData[0]);
     }
     
-    public static ChooseDataList[] getMatchCDLs(String s){
-        List<ChooseDataList> cdls=new ArrayList<>();
+    public static ListData[] getMatchCDLs(String s){
+        List<ListData> cdls=new ArrayList<>();
         try{
             String sql="SELECT ID FROM LISTS WHERE LIST LIKE '%"+escapeForLike(s)+"%'";
             System.out.println("["+sql+"]");
@@ -125,12 +125,12 @@ public class CDFLibrary{
             ResultSet rs=ps.executeQuery();
             while(rs.next()){
                 int id=rs.getInt(1);
-                cdls.add(new ChooseDataList(id));
+                cdls.add(new ListData(id));
             }
         }catch(SQLException e){
             e.printStackTrace();
         }
-        return cdls.toArray(new ChooseDataList[0]);
+        return cdls.toArray(new ListData[0]);
     }
     public static boolean existsSongFile(String fname){
         return getSongId(fname)!=-1;
@@ -205,8 +205,8 @@ public class CDFLibrary{
     public static String getListName(int id){
         return getStringValueFromTableById("LIST","LISTS",id);
     }
-    public static ChooseDataSong[] getListSongs(int id){
-        List<ChooseDataSong> list=new ArrayList<>();
+    public static SongData[] getListSongs(int id){
+        List<SongData> list=new ArrayList<>();
         try{
             String sql="SELECT SONGID FROM LISTSONGS WHERE LISTID="+id+" ORDER BY NUM";
             System.out.println("["+sql+"]");
@@ -214,12 +214,12 @@ public class CDFLibrary{
             ResultSet rs=ps.executeQuery(); 
             while(rs.next()){
                 int songid=rs.getInt(1);
-                list.add(new ChooseDataSong(songid));
+                list.add(new SongData(songid));
             }
         }catch(SQLException e){
             e.printStackTrace();
         }
-        return list.toArray(new ChooseDataSong[0]);
+        return list.toArray(new SongData[0]);
     }
     public static int getListSize(int id){
         try{

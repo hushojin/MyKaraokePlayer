@@ -2,7 +2,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class CDSEditor extends Dialog{
-    CDSEditor(ChooseDataSong cds){
+    CDSEditor(SongData cds){
         super((Frame)null,"曲編集",true);
         
         Label fnl = new Label("ファイル名:",Label.RIGHT);

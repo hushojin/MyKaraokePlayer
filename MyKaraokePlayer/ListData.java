@@ -1,6 +1,6 @@
-public class ChooseDataList extends ChooseData{
+public class ListData extends Data{
     final int id;
-    ChooseDataList(int id){
+    ListData(int id){
         this.id = id;
     }
     
@@ -14,7 +14,7 @@ public class ChooseDataList extends ChooseData{
       return CDFLibrary.getListSize(id);
     }
     
-    public ChooseDataSong[] getSongs(){
+    public SongData[] getSongs(){
         return CDFLibrary.getListSongs(id);
     }
     

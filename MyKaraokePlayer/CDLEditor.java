@@ -4,16 +4,16 @@ import javax.swing.*;
 
 public class CDLEditor extends Dialog{
     PopSongInfo popSong;
-    CDLEditor(ChooseDataList cdl){
+    CDLEditor(ListData cdl){
         super((Frame)null,"プレイリスト編集",true);
         String defaultName = cdl.getName();
         Label ln = new Label("名前:");
         TextField tfn = new TextField(defaultName);
-        java.util.List<ChooseDataSong> listSongs=new java.util.ArrayList<ChooseDataSong>();
+        java.util.List<SongData> listSongs=new java.util.ArrayList<SongData>();
         List listSongList = new List();
         Button removeButton = new Button("削除>>");
         Button addButton = new Button("<<追加");
-        ChooseDataSong[] allSongs=CDFLibrary.getMatchCDSs("");
+        SongData[] allSongs=CDFLibrary.getMatchCDSs("");
         List allSongList = new List();
         Button saveButton = new Button("保存");
         Button canselButton = new Button("キャンセル");
@@ -60,7 +60,7 @@ public class CDLEditor extends Dialog{
         tfn.setBounds(50,40,95,20);
         
         add(listSongList);
-        for(ChooseDataSong cds:cdl.getSongs()){
+        for(SongData cds:cdl.getSongs()){
             listSongList.add(cds.getName());
             listSongs.add(cds);
         }
@@ -121,7 +121,7 @@ public class CDLEditor extends Dialog{
         addButton.setBounds(155,110,70,20);
         
         add(allSongList);
-        for(ChooseDataSong cds:allSongs){
+        for(SongData cds:allSongs){
             allSongList.add(cds.getName());
         }
         allSongList.addItemListener(
@@ -174,7 +174,7 @@ public class CDLEditor extends Dialog{
     }
     
     
-    void popupInfo(Point p,ChooseDataSong cds){
+    void popupInfo(Point p,SongData cds){
         if(popSong!=null){
             popSong.hide();
             popSong=null;
@@ -184,13 +184,13 @@ public class CDLEditor extends Dialog{
     }
     
     class PopSongInfo extends Popup{
-        public PopSongInfo(Point p,ChooseDataSong cds){
+        public PopSongInfo(Point p,SongData cds){
             super(CDLEditor.this,new PnSongInfo(cds),(int)(p.getX()),(int)(p.getY()));
         }
     }
     
     class PnSongInfo extends Panel{
-        PnSongInfo(ChooseDataSong cds){
+        PnSongInfo(SongData cds){
             setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
             Label name = new Label(cds.getName());
             Label grade = new Label(String.valueOf(cds.getGrade()));
