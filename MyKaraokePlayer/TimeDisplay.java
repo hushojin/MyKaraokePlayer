@@ -1,19 +1,21 @@
 import java.awt.*;
 
 public class TimeDisplay extends Panel implements PlayStateDisplay{
-    private Label label = new Label("0:00/0:00",Label.CENTER);
+    private Label label = new Label("-:--/-:--",Label.CENTER);
     PlayState state;
     
     public TimeDisplay(){
         setLayout(null);
         setBackground(Color.white);
+        label.setFont(new Font(Font.MONOSPACED,Font.PLAIN,12));
         add(label);
         label.setBounds(1,3,65,23);
     }
     
     public void paint(Graphics g){
         if(state==null){
-          return;
+            label.setText("-:--/-:--");
+            return;
         }
         label.setText(secToTime(state.microPosition/1000000)+"/"+secToTime(state.maxMicro/1000000));
     }
@@ -23,5 +25,6 @@ public class TimeDisplay extends Panel implements PlayStateDisplay{
     
     public void setPlayState(PlayState state){
         this.state=state;
+        repaint();
     }
 }

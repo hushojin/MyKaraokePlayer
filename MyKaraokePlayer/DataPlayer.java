@@ -50,7 +50,7 @@ public class DataPlayer{
         }else{
             setList((ListData)d);
         }
-        player.start();
+        player.play();
     }
     public void setSong(SongData sd){
         hasSong=true;
@@ -74,7 +74,7 @@ public class DataPlayer{
             index++;
             SongData sd=sds[index];
             player.setFile(new File(SONG_FILE_DIRECTORY,sd.getFname()));
-            player.start();
+            player.play();
             sDisp.setString((index+1)+"/"+sds.length+" "+sd.getName()+" MyKarakePlayer");
         }
     }
@@ -83,7 +83,7 @@ public class DataPlayer{
             index--;
             SongData sd=sds[index];
             player.setFile(new File(SONG_FILE_DIRECTORY,sd.getFname()));
-            player.start();
+            player.play();
             sDisp.setString((index+1)+"/"+sds.length+" "+sd.getName()+" MyKarakePlayer");
         }else{
             setFramePosition(0);
@@ -99,98 +99,65 @@ public class DataPlayer{
         psDisplayUpdate();
     }
     public void start(){
-        player.start();
+        player.play();
     }
     public void pause(){
         player.pause();
     }
-/*
-    public void endPlay(){
-        if(hasSong){
-            player.setFramePosition(0);
-         }else{
-            next();
-         }
-    }
-*/
     
     private static class FilePlayer{
-        private AudioInputStream ais;
-        private AudioInputStream dais;
-        private AudioFormat af;
         private Clip clip;
         private Timer timer=new Timer(100,(e)->running());
-        FilePlayer(){}
         
-        public void setFile(File file){
+        void setFile(File file){
             stop();
-            prepare(file);
-        }
-        private void prepare(File file){
-            try {
-                AudioInputStream ais = AudioSystem.getAudioInputStream(file);
+            try(AudioInputStream ais= AudioSystem.getAudioInputStream(file) ){
                 AudioFormat baseFormat = ais.getFormat();
-                AudioFormat decodedFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED,baseFormat.getSampleRate(),16,baseFormat.getChannels(),baseFormat.getChannels() * 2,baseFormat.getSampleRate(),false);
-                dais = AudioSystem.getAudioInputStream(decodedFormat,ais);
-                rawplayclip(decodedFormat,dais);
-                ais.close();
-            }catch (Exception e){
-                System.out.println(e);
-            }
-        }
-        private void rawplayclip(AudioFormat targetFormat, AudioInputStream din){
-            try {
-                DataLine.Info info = new DataLine.Info(Clip.class, targetFormat);
-                clip = (Clip)AudioSystem.getLine(info);
-                clip.addLineListener(
-                    (e)->{
-                        if(e.getType()==LineEvent.Type.START){
-                            timer.start();
-                        }else if(e.getType()==LineEvent.Type.STOP){
-                            timer.stop();
-                            if(clip.getFramePosition()>=clip.getFrameLength()){
-                                endPlay();
+                AudioFormat targetFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED,baseFormat.getSampleRate(),16,baseFormat.getChannels(),baseFormat.getChannels() * 2,baseFormat.getSampleRate(),false);
+                try( AudioInputStream dais = AudioSystem.getAudioInputStream(targetFormat,ais) ){
+                    DataLine.Info info = new DataLine.Info(Clip.class,targetFormat);
+                    clip = (Clip)AudioSystem.getLine(info);
+                    clip.addLineListener(
+                        (e)->{
+                            if(e.getType()==LineEvent.Type.START){
+                                timer.start();
+                            }else if(e.getType()==LineEvent.Type.STOP){
+                                timer.stop();
+                                if(clip.getFramePosition()>=clip.getFrameLength()){
+                                    endPlay();
+                                }
                             }
                         }
-                    }
-                );
-                clip.open(din);
-            } catch (IOException | LineUnavailableException e) {
-                e.printStackTrace();
-            }finally {
-                try {
-                    din.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    );
+                    clip.open(dais);
+                }catch(LineUnavailableException | IOException e){
+                    clip=null;
+                    throw e;
                 }
+            }catch(LineUnavailableException | UnsupportedAudioFileException | IOException e){
+                e.printStackTrace();
             }
         }
         
-        public void stop(){
-            try{
-                if(clip!=null&&clip.isOpen()){
-                    clip.stop();
-                    clip.close();
-                    clip=null;
-                }
-                if(ais!=null){
-                    ais.close();
-                }
-                if(dais!=null){
-                    dais.close();
-                }
-            }catch(IOException e){
-                e.printStackTrace();
+        void stop(){
+            if(clip==null){
+                return;
             }
+            if(clip.isOpen()){
+                clip.stop();
+                clip.close();
+            }
+            clip=null;
+            manipulated();
         }
-        public void start(){
+        void play(){
             if(clip==null){
                 return;
             }
             clip.start();
             manipulated();
         }
-        public void pause(){
+        void pause(){
             if(clip==null){
                 return;
             }
@@ -198,22 +165,22 @@ public class DataPlayer{
             manipulated();
         }
         
-        public void shiftSecond(int sec){
+        void setFramePosition(int frame){
+            if(clip==null){
+                return;
+            }
+            clip.setFramePosition(frame);
+            manipulated();
+        }
+        void shiftSecond(int sec){
             if(clip==null){
                 return;
             }
             clip.setMicrosecondPosition(clip.getMicrosecondPosition()+sec*1000000L);
             manipulated();
         }
-        public boolean startFromSecond(int sec){
+        boolean startFromSecond(int sec){
            return clip.getMicrosecondPosition() < sec*1000000L; 
-        }
-        public void setFramePosition(int frame){
-            if(clip==null){
-                return;
-            }
-            clip.setFramePosition(frame);
-            manipulated();
         }
         public PlayState getPlayState(){
           if(clip==null){

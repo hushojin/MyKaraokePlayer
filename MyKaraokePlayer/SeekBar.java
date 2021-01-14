@@ -4,12 +4,14 @@ import javax.swing.*;
 
 public class SeekBar extends Panel implements PlayStateDisplay{
     private PlayState state;
-    private Label label = new Label("0:00:00");
+    private Label label;
     private Popup pop;
     public SeekBar(DataPlayer player){
         setBackground(Color.white);
         setFocusable(false);
+        label = new Label("0:00",Label.CENTER);
         label.setSize(55,23);
+        label.setFont(new Font(Font.MONOSPACED,Font.PLAIN,12));
         addMouseListener(
             new MouseAdapter(){
                 public void mouseReleased(MouseEvent e){
@@ -48,7 +50,7 @@ public class SeekBar extends Panel implements PlayStateDisplay{
         );
     }
     static private String secToTime(int sec){
-      return (sec/3600)+":"+(sec/60%60<10?"0":"")+(sec/60%60)+":"+(sec%60<10?"0":"")+(sec%60);
+      return (sec/60)+":"+(sec%60<10?"0":"")+(sec%60);
     }
     
     public void paint(Graphics g){
@@ -62,5 +64,6 @@ public class SeekBar extends Panel implements PlayStateDisplay{
     
     public void setPlayState(PlayState state){
         this.state=state;
+        repaint();
     }
 }

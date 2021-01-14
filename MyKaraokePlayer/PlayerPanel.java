@@ -15,7 +15,6 @@ public class PlayerPanel extends Panel implements PlayStateDisplay{
         setBackground(Color.gray);
         setLayout(null);
         add(playButton);
-        playButton.setEnabled(false);
         playButton.addActionListener(
             (e)->{
                 if(state.isPlaying){
@@ -58,6 +57,12 @@ public class PlayerPanel extends Panel implements PlayStateDisplay{
                 }
             }
         );
+        
+        playButton.setEnabled(false);
+        previousButton.setEnabled(false);
+        nextButton.setEnabled(false);
+        seekBar.setEnabled(false);
+        
         player.setPlayStateDisplay(this);
     }
     
@@ -80,20 +85,23 @@ public class PlayerPanel extends Panel implements PlayStateDisplay{
     public void setPlayState(PlayState state){
         this.state=state;
         if(state==null){
-          playButton.setEnabled(false);
-          previousButton.setEnabled(false);
-          nextButton.setEnabled(false);
-          seekBar.setEnabled(false);
-        }
-        playButton.setEnabled(true);
-        if(state.isPlaying){
-            playButton.setLabel("||");
+            playButton.setEnabled(false);
+            previousButton.setEnabled(false);
+            nextButton.setEnabled(false);
+            seekBar.setEnabled(false);
         }else{
-            playButton.setLabel(">");
+            playButton.setEnabled(true);
+            previousButton.setEnabled(true);
+            nextButton.setEnabled(true);
+            seekBar.setEnabled(true);
+            playButton.requestFocusInWindow();
+            if(state.isPlaying){
+                playButton.setLabel("||");
+            }else{
+                playButton.setLabel(">");
+            }
         }
         seekBar.setPlayState(state);
         timeDisplay.setPlayState(state);
-        seekBar.repaint();
-        timeDisplay.repaint();
     }
 }
