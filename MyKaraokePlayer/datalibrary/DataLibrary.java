@@ -11,7 +11,10 @@ public class DataLibrary{
             String user="mkp";
             String pass="pass";
             conn=DriverManager.getConnection(url,user,pass);
-        }catch(SQLException e){e.printStackTrace();}
+        }catch(SQLException e){
+            e.printStackTrace();
+            System.exit(1);
+        }
     }
     
     public void editSong(int songId,String name,int grade,String comment,String date,String with,String score){
@@ -29,6 +32,7 @@ public class DataLibrary{
             ps.executeUpdate();
         }catch(SQLException e){
             e.printStackTrace();
+            System.exit(1);
         }
     }
     
@@ -48,6 +52,7 @@ public class DataLibrary{
             ps.executeUpdate();
         }catch(SQLException e){
             e.printStackTrace();
+            System.exit(1);
         }
     }
     
@@ -66,6 +71,7 @@ public class DataLibrary{
             }
         }catch(SQLException e){
             e.printStackTrace();
+            System.exit(1);
         }
     }
     
@@ -77,6 +83,7 @@ public class DataLibrary{
             ps.executeUpdate();
         }catch(SQLException e){
             e.printStackTrace();
+            System.exit(1);
         }
     }
     
@@ -98,6 +105,7 @@ public class DataLibrary{
             ps.executeUpdate();
         }catch(SQLException e){
             e.printStackTrace();
+            System.exit(1);
         }
     }
     
@@ -114,6 +122,7 @@ public class DataLibrary{
             }
         }catch(SQLException e){
             e.printStackTrace();
+            System.exit(1);
         }
         return songs.toArray(new SongData[0]);
     }
@@ -131,6 +140,7 @@ public class DataLibrary{
             }
         }catch(SQLException e){
             e.printStackTrace();
+            System.exit(1);
         }
         return lists.toArray(new ListData[0]);
     }
@@ -144,11 +154,12 @@ public class DataLibrary{
             PreparedStatement ps=conn.prepareCall(sql);
             ResultSet rs=ps.executeQuery(); 
             if(rs.next()){
-                int songId=rs.getInt(1);
-                return songId;
+                int res=rs.getInt(1);
+                return res;
             }
         }catch(SQLException e){
             e.printStackTrace();
+            System.exit(1);
         }
         return -1;
     }
@@ -162,52 +173,53 @@ public class DataLibrary{
             PreparedStatement ps=conn.prepareCall(sql);
             ResultSet rs=ps.executeQuery(); 
             if(rs.next()){
-                int listId=rs.getInt(1);
-                return listId;
-            }
-        }catch(SQLException e){
-            e.printStackTrace();
-        }
-        return -1;
-    }
-    
-    public String getSongName(int songId){
-        return getStringValueFromTableById("TITLE","SONGS",songId);
-    }
-    public String getSongFile(int songId){
-        return getStringValueFromTableById("FILE","SONGS",songId);
-    }
-    public String getSongDate(int songId){
-        return getStringValueFromTableById("DATE","SONGS",songId);
-    }
-    public String getSongWith(int songId){
-        return getStringValueFromTableById("COMP","SONGS",songId);
-    }
-    public String getSongComment(int songId){
-        return getStringValueFromTableById("COMM","SONGS",songId);
-    }
-    public  String getSongScore(int songId){
-        return getStringValueFromTableById("SCORE","SONGS",songId);
-    }
-    public int getSongEval(int songId){
-        try{
-            String sql="SELECT EVAL FROM SONGS WHERE ID="+songId;
-            //System.out.println("["+sql+"]");
-            PreparedStatement ps=conn.prepareCall(sql);
-            ResultSet rs=ps.executeQuery(); 
-            if(rs.next()){
                 int res=rs.getInt(1);
                 return res;
             }
         }catch(SQLException e){
             e.printStackTrace();
+            System.exit(1);
         }
-        return 0;
+        return -1;
     }
-    public String getListName(int listId){
+    
+    String getSongName(int songId){
+        return getStringValueFromTableById("TITLE","SONGS",songId);
+    }
+    String getSongFile(int songId){
+        return getStringValueFromTableById("FILE","SONGS",songId);
+    }
+    String getSongDate(int songId){
+        return getStringValueFromTableById("DATE","SONGS",songId);
+    }
+    String getSongWith(int songId){
+        return getStringValueFromTableById("COMP","SONGS",songId);
+    }
+    String getSongComment(int songId){
+        return getStringValueFromTableById("COMM","SONGS",songId);
+    }
+    String getSongScore(int songId){
+        return getStringValueFromTableById("SCORE","SONGS",songId);
+    }
+    int getSongEval(int songId){
+        int res=-1;
+        try{
+            String sql="SELECT EVAL FROM SONGS WHERE ID="+songId;
+            //System.out.println("["+sql+"]");
+            PreparedStatement ps=conn.prepareCall(sql);
+            ResultSet rs=ps.executeQuery(); 
+            rs.next();
+            res=rs.getInt(1);
+        }catch(SQLException e){
+            e.printStackTrace();
+            System.exit(1);
+        }
+        return res;
+    }
+    String getListName(int listId){
         return getStringValueFromTableById("LIST","LISTS",listId);
     }
-    public SongData[] getListSongs(int listId){
+    SongData[] getListSongs(int listId){
         List<SongData> list=new ArrayList<>();
         try{
             String sql="SELECT SONGID FROM LISTSONGS WHERE LISTID="+listId+" ORDER BY NUM";
@@ -220,39 +232,40 @@ public class DataLibrary{
             }
         }catch(SQLException e){
             e.printStackTrace();
+            System.exit(1);
         }
         return list.toArray(new SongData[0]);
     }
-    public int getListSize(int listId){
+    int getListSize(int listId){
+        int res=-1;
         try{
             String sql="SELECT COUNT(NUM) FROM LISTSONGS WHERE LISTID="+listId;
             //System.out.println("["+sql+"]");
             PreparedStatement ps=conn.prepareCall(sql);
             ResultSet rs=ps.executeQuery(); 
-            if(rs.next()){
-                int size=rs.getInt(1);
-                return size;
-            }
+            rs.next();
+            res=rs.getInt(1);
         }catch(SQLException e){
             e.printStackTrace();
+            System.exit(1);
         }
-        return 0;
+        return res;
     }
     
     private String getStringValueFromTableById(String value,String table,int id){
+        String res=null;
         try{
             String sql="SELECT "+value+" FROM "+table+" WHERE ID="+id;
             //System.out.println("["+sql+"]");
             PreparedStatement ps=conn.prepareCall(sql);
             ResultSet rs=ps.executeQuery(); 
-            if(rs.next()){
-                String res=rs.getString(1);
-                return res;
-            }
+            rs.next();
+            res=rs.getString(1);
         }catch(SQLException e){
             e.printStackTrace();
+            System.exit(1);
         }
-        return null;
+        return res;
     }
     
     private static String escape(String raw){

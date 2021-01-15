@@ -1,6 +1,6 @@
 package datalibrary;
 
-public class ListData extends Data{
+public class ListData{
     private final DataLibrary library;
     private final int id;
     ListData(DataLibrary library,int id){

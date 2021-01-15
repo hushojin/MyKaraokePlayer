@@ -15,12 +15,12 @@ public class SeekBar extends Panel implements PlayStateDisplay{
         addMouseListener(
             new MouseAdapter(){
                 public void mouseReleased(MouseEvent e){
-                    double cursorFrame = 1.0*(getMousePosition().getX()-5)/(getWidth()-10)*state.maxFrame;
+                    double cursorFrame = 1.0*(e.getX()-5)/(getWidth()-10)*state.maxFrame;
                     cursorFrame=Math.max(Math.min(cursorFrame,state.maxFrame),0);
                     player.setFramePosition((int)cursorFrame);
                 }
                 public void mouseEntered(MouseEvent e){
-                    Point p=getLocationOnScreen();
+                    Point p=e.getLocationOnScreen();
                     pop=PopupFactory.getSharedInstance().getPopup(SeekBar.this,label,p.x,p.y-label.getHeight());
                     pop.show();
                 }
@@ -33,16 +33,14 @@ public class SeekBar extends Panel implements PlayStateDisplay{
         addMouseMotionListener(
             new MouseMotionAdapter(){
                 public void mouseDrugged(MouseEvent e){
-                    if(getMousePosition()!=null&&state!=null){
-                       double cursorMicro = 1.0*(getMousePosition().getX()-5)*state.maxMicro/(getWidth()-10)/1000000;
-                       cursorMicro=Math.max(Math.min(cursorMicro,state.maxMicro),0);
-                       label.setText(secToTime((int)cursorMicro));
-                    }
+                    double cursorMicro = 1.0*(e.getX()-5)*state.maxMicro/(getWidth()-10);
+                    cursorMicro=Math.max(Math.min(cursorMicro,state.maxMicro),0)/1000000;
+                    label.setText(secToTime((int)cursorMicro));
                 }
                 public void mouseMoved(MouseEvent e){
-                    if(getMousePosition()!=null&&state!=null){
-                       double cursorMicro = 1.0*(getMousePosition().getX()-5)*state.maxMicro/(getWidth()-10)/1000000;
-                       cursorMicro=Math.max(Math.min(cursorMicro,state.maxMicro),0);
+                    if(state!=null){
+                       double cursorMicro = 1.0*(e.getX()-5)*state.maxMicro/(getWidth()-10);
+                       cursorMicro=Math.max(Math.min(cursorMicro,state.maxMicro),0)/1000000;
                        label.setText(secToTime((int)cursorMicro));
                     }
                 }

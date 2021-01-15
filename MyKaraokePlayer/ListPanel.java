@@ -4,7 +4,8 @@ import javax.swing.*;
 import datalibrary.*;
 
 public class ListPanel extends Panel{
-    private Data[] datas;
+    private SongData[] songDatas;
+    private ListData[] listDatas;
     private TextField searchField=new TextField();
     private Panel checkboxPanel = new Panel(null);
     private CheckboxGroup cbg = new CheckboxGroup();
@@ -21,8 +22,9 @@ public class ListPanel extends Panel{
         this.library=library;
         setLayout(null);
         setBackground(Color.black);
-        datas=library.getMatchSongs("");
-        list=createListFrom(datas);
+        songDatas=library.getMatchSongs("");
+        listDatas=null;
+        list=createListFrom(songDatas);
         add(list);
         searchField.addTextListener((e)->update());
         add(searchField);
@@ -64,26 +66,30 @@ public class ListPanel extends Panel{
     }
     
     private void update(){
+        songDatas=null;
+        listDatas=null;
+        List l;
         if(songCheckbox.getState()){
-            datas=library.getMatchSongs(searchField.getText());
+            songDatas=library.getMatchSongs(searchField.getText());
+            l=createListFrom(songDatas);
         }else{
-            datas=library.getMatchLists(searchField.getText());
+            listDatas=library.getMatchLists(searchField.getText());
+            l=createListFrom(listDatas);
         }
-        List l=createListFrom(datas);
         remove(list);
         list=l;
         add(list);
         selfLayout();
     }
     
-    private List createListFrom(Data[] datas){
+    private List createListFrom(SongData[] songDatas){
         List res=new List();
-        for(Data cd:datas){
-            res.add(cd.getName());
+        for(SongData sd:songDatas){
+            res.add(sd.getName());
         }
         res.addActionListener(
             (e)->{
-                player.setData(datas[list.getSelectedIndex()]);
+                player.setSongData(songDatas[list.getSelectedIndex()]);
                 transferFocus();
             }
         );
@@ -91,12 +97,31 @@ public class ListPanel extends Panel{
             new MouseAdapter(){
                 public void mouseReleased(MouseEvent e){
                     if(e.getButton()==MouseEvent.BUTTON3&&list.getSelectedIndex()!=-1){
-                        Data cd=datas[list.getSelectedIndex()];
-                        if(cd.isSong()){
-                            showSongInfo(MouseInfo.getPointerInfo().getLocation(),(SongData)cd);
-                        }else{
-                            showListInfo(MouseInfo.getPointerInfo().getLocation(),(ListData)cd);
-                        }
+                        SongData sd=songDatas[list.getSelectedIndex()];
+                        showSongInfo(MouseInfo.getPointerInfo().getLocation(),sd);
+                    }
+                }
+            }
+        );
+        return res;
+    }
+    private List createListFrom(ListData[] listDatas){
+        List res=new List();
+        for(ListData ld:listDatas){
+            res.add(ld.getName());
+        }
+        res.addActionListener(
+            (e)->{
+                player.setListData(listDatas[list.getSelectedIndex()]);
+                transferFocus();
+            }
+        );
+        res.addMouseListener(
+            new MouseAdapter(){
+                public void mouseReleased(MouseEvent e){
+                    if(e.getButton()==MouseEvent.BUTTON3&&list.getSelectedIndex()!=-1){
+                        ListData ld=listDatas[list.getSelectedIndex()];
+                        showListInfo(MouseInfo.getPointerInfo().getLocation(),ld);
                     }
                 }
             }

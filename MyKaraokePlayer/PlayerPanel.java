@@ -20,7 +20,7 @@ public class PlayerPanel extends Panel implements PlayStateDisplay{
                 if(state.isPlaying){
                     player.pause();
                 }else{
-                    player.start();
+                    player.play();
                 }
             }
         );

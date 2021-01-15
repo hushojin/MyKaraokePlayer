@@ -1,6 +1,6 @@
 package datalibrary;
 
-public class SongData extends Data{
+public class SongData{
     private final DataLibrary library;
     private final int id;
     
