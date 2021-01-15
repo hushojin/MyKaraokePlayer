@@ -4,31 +4,31 @@ import datalibrary.*;
 
 public class SongDataEditDialog extends Dialog{
     SongDataEditDialog(DataLibrary library,SongData sd){
-        super((Frame)null,"ã»ï“èW",true);
+        super((Frame)null,"Êõ≤Á∑®ÈõÜ",true);
         
-        Label fnl = new Label("ÉtÉ@ÉCÉãñº:",Label.RIGHT);
+        Label fnl = new Label("„Éï„Ç°„Ç§„É´Âêç:",Label.RIGHT);
         Label fname = new Label(sd.getFname());
         
-        Label nl = new Label("ã»ñº",Label.RIGHT);
+        Label nl = new Label("Êõ≤Âêç",Label.RIGHT);
         TextField name = new TextField(sd.getName());
         
-        Label gl = new Label("ï]âø:",Label.RIGHT);
+        Label gl = new Label("Ë©ï‰æ°:",Label.RIGHT);
         TextField grade = new TextField(String.valueOf(sd.getGrade()));
         
-        Label cl = new Label("ÉRÉÅÉìÉg:",Label.RIGHT);
+        Label cl = new Label("„Ç≥„É°„É≥„Éà:",Label.RIGHT);
         TextField comment = new TextField(sd.getComment());
         
-        Label wl = new Label("ìØî∫:",Label.RIGHT);
+        Label wl = new Label("Âêå‰º¥:",Label.RIGHT);
         TextField with = new TextField(sd.getWith());
         
-        Label dl = new Label("ì˙ït:",Label.RIGHT);
+        Label dl = new Label("Êó•‰ªò:",Label.RIGHT);
         TextField date = new TextField(sd.getDate());
         
-        Label sl = new Label("ÉXÉRÉA:",Label.RIGHT);
+        Label sl = new Label("„Çπ„Ç≥„Ç¢:",Label.RIGHT);
         TextField score = new TextField(sd.getScore());
         
-        Button finish = new Button("ï€ë∂");
-        Button cancel = new Button("ÉLÉÉÉìÉZÉã");
+        Button finish = new Button("‰øùÂ≠ò");
+        Button cancel = new Button("„Ç≠„É£„É≥„Çª„É´");
         
         addWindowListener(
             new WindowAdapter(){

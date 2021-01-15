@@ -52,12 +52,12 @@ public class SeekBar extends Panel implements PlayStateDisplay{
     }
     
     public void paint(Graphics g){
-        g.drawLine(5,getHeight()/2,getWidth()-5,getHeight()/2);//‰¡ü
+        g.drawLine(5,getHeight()/2,getWidth()-5,getHeight()/2);//æ¨ªç·š
         int x = 5;
         if(state!=null){
             x = (int) ( ( state.framePosition * (getWidth()-10.0) / state.maxFrame ) + 5.0  );
         }
-        g.drawLine((int)x,5,(int)x,getHeight()-5);//cü
+        g.drawLine((int)x,5,(int)x,getHeight()-5);//ç¸¦ç·š
     }
     
     public void setPlayState(PlayState state){

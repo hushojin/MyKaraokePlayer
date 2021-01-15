@@ -7,7 +7,7 @@ public class DataLibrary{
     private Connection conn;
     public DataLibrary(){
         try{
-            String url="jdbc:mysql://localhost/mkpdb?useUnicode=true&useJDBCCompliantTimezoneShift=true&serverTimezone=UTC";
+            String url="jdbc:mysql://localhost/mkpdb?useUnicode=true&useJDBCCompliantTimezoneShift=true&serverTimezone=UTC";//https://www.nakamuri.info/mw/index.php/Mysql-connector-java_%E3%81%AE%E3%83%90%E3%82%B0%E3%81%A7_Java%E3%81%8B%E3%82%89MySQL%E3%81%AB%E6%8E%A5%E7%B6%9A%E3%81%A7%E3%81%8D%E3%81%AA%E3%81%84辺りを参考に色々つけた。正直よく分かってない
             String user="mkp";
             String pass="pass";
             conn=DriverManager.getConnection(url,user,pass);
@@ -65,7 +65,7 @@ public class DataLibrary{
             int listid=getListId(name);
             for(int i=1;i<=songIds.length;i++){
                 sql="INSERT INTO LISTSONGS VALUES ('"+listid+"',"+i+","+songIds[i-1]+")";
-                System.out.println("["+sql+"]");
+                //System.out.println("["+sql+"]");
                 ps=conn.prepareCall(sql);
                 ps.executeUpdate();
             }
@@ -91,17 +91,19 @@ public class DataLibrary{
         try{
             String sql="DELETE FROM LISTSONGS WHERE LISTID="+listId;
             //System.out.println("["+sql+"]");
+            PreparedStatement ps=conn.prepareCall(sql);
+            ps.executeUpdate();
             for(int num=1;num<=newSongIds.length;num++){
                 sql="INSERT INTO LISTSONGS VALUES ('"+listId+"',"+num+","+newSongIds[num-1]+")";
-                System.out.println("["+sql+"]");
-                PreparedStatement ps=conn.prepareCall(sql);
+                //System.out.println("["+sql+"]");
+                ps=conn.prepareCall(sql);
                 ps.executeUpdate();
             }
             sql="UPDATE LISTS SET "+
                 "LIST='"+escape(newName)+"' "+
                 "WHERE ID="+listId;
-            System.out.println("["+sql+"]");
-            PreparedStatement ps=conn.prepareCall(sql);
+            //System.out.println("["+sql+"]");
+            ps=conn.prepareCall(sql);
             ps.executeUpdate();
         }catch(SQLException e){
             e.printStackTrace();

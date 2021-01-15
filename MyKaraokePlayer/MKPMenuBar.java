@@ -3,9 +3,9 @@ import java.awt.event.*;
 import datalibrary.*;
 
 public class MKPMenuBar extends MenuBar {
-    private Menu createMenu = new Menu("V‹Kì¬");
-    private MenuItem SongCreateItem = new MenuItem("‹È(S)",new MenuShortcut(KeyEvent.VK_S, true));
-    private MenuItem ListCreateItem = new MenuItem("ƒvƒŒƒCƒŠƒXƒg(L)",new MenuShortcut(KeyEvent.VK_L, true));
+    private Menu createMenu = new Menu("æ–°è¦ä½œæˆ");
+    private MenuItem SongCreateItem = new MenuItem("æ›²(S)",new MenuShortcut(KeyEvent.VK_S, true));
+    private MenuItem ListCreateItem = new MenuItem("ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆ(L)",new MenuShortcut(KeyEvent.VK_L, true));
     
     MKPMenuBar(DataLibrary library){
         add(createMenu);

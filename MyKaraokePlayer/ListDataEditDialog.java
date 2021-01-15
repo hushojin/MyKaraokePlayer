@@ -6,18 +6,18 @@ import datalibrary.*;
 public class ListDataEditDialog extends Dialog{
     private PopSongInfo popSong;
     public ListDataEditDialog(DataLibrary library,ListData cdl){
-        super((Frame)null,"ƒvƒŒƒCƒŠƒXƒg•ÒW",true);
+        super((Frame)null,"ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆç·¨é›†",true);
         String defaultName = cdl.getName();
-        Label ln = new Label("–¼‘O:");
+        Label ln = new Label("åå‰:");
         TextField tfn = new TextField(defaultName);
         java.util.List<SongData> listSongs=new java.util.ArrayList<SongData>();
         List listSongList = new List();
-        Button removeButton = new Button("íœ>>");
-        Button addButton = new Button("<<’Ç‰Á");
+        Button removeButton = new Button("å‰Šé™¤>>");
+        Button addButton = new Button("<<è¿½åŠ ");
         SongData[] allSongs=library.getMatchSongs("");
         List allSongList = new List();
-        Button saveButton = new Button("•Û‘¶");
-        Button cancelButton = new Button("ƒLƒƒƒ“ƒZƒ‹");
+        Button saveButton = new Button("ä¿å­˜");
+        Button cancelButton = new Button("ã‚­ãƒ£ãƒ³ã‚»ãƒ«");
         
         addWindowListener(
             new WindowAdapter(){

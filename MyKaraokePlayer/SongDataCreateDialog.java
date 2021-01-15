@@ -4,32 +4,32 @@ import datalibrary.*;
 
 public class SongDataCreateDialog extends Dialog{
     public SongDataCreateDialog(DataLibrary library){
-        super((Frame)null,"‹ÈV‹Kì¬",true);
+        super((Frame)null,"æ›²æ–°è¦ä½œæˆ",true);
         
-        Label fnl = new Label("ƒtƒ@ƒCƒ‹–¼:",Label.RIGHT);
+        Label fnl = new Label("ãƒ•ã‚¡ã‚¤ãƒ«å:",Label.RIGHT);
         Label fname = new Label();
         Button ref = new Button("...");
         
-        Label nl = new Label("‹È–¼",Label.RIGHT);
+        Label nl = new Label("æ›²å",Label.RIGHT);
         TextField name = new TextField();
         
-        Label gl = new Label("•]‰¿:",Label.RIGHT);
+        Label gl = new Label("è©•ä¾¡:",Label.RIGHT);
         TextField grade = new TextField();grade.setText("0");
         
-        Label cl = new Label("ƒRƒƒ“ƒg:",Label.RIGHT);
+        Label cl = new Label("ã‚³ãƒ¡ãƒ³ãƒˆ:",Label.RIGHT);
         TextField comment = new TextField();
         
-        Label wl = new Label("“¯”º:",Label.RIGHT);
+        Label wl = new Label("åŒä¼´:",Label.RIGHT);
         TextField with = new TextField();
         
-        Label dl = new Label("“ú•t:",Label.RIGHT);
+        Label dl = new Label("æ—¥ä»˜:",Label.RIGHT);
         TextField date = new TextField();
         
-        Label sl = new Label("ƒXƒRƒA:",Label.RIGHT);
+        Label sl = new Label("ã‚¹ã‚³ã‚¢:",Label.RIGHT);
         TextField score = new TextField();
         
-        Button finish = new Button("•Û‘¶");
-        Button cancel = new Button("ƒLƒƒƒ“ƒZƒ‹");
+        Button finish = new Button("ä¿å­˜");
+        Button cancel = new Button("ã‚­ãƒ£ãƒ³ã‚»ãƒ«");
         
         addWindowListener(
             new WindowAdapter(){
@@ -47,7 +47,7 @@ public class SongDataCreateDialog extends Dialog{
         ref.setBounds(fname.getX()+fname.getWidth(),fname.getY(),20,20);
         ref.addActionListener(
             (e)->{
-                FileDialog fd = new FileDialog(SongDataCreateDialog.this,"ƒtƒ@ƒCƒ‹‘I‘ğ",FileDialog.LOAD);
+                FileDialog fd = new FileDialog(SongDataCreateDialog.this,"ãƒ•ã‚¡ã‚¤ãƒ«é¸æŠ",FileDialog.LOAD);
                 fd.setDirectory("C:\\Users\\Owner\\Desktop\\Karaokewavs");
                 fd.setVisible(true);
                 if(fd.getFiles().length<1){return;};

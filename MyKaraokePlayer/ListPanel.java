@@ -9,8 +9,8 @@ public class ListPanel extends Panel{
     private TextField searchField=new TextField();
     private Panel checkboxPanel = new Panel(null);
     private CheckboxGroup cbg = new CheckboxGroup();
-    private Checkbox songCheckbox = new Checkbox("’P‹È",cbg,true);
-    private Checkbox listCheckbox = new Checkbox("ƒvƒŒƒCƒŠƒXƒg",cbg,false);
+    private Checkbox songCheckbox = new Checkbox("å˜æ›²",cbg,true);
+    private Checkbox listCheckbox = new Checkbox("ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆ",cbg,false);
     private List list;
     private PopListInfo popList;
     private PopSongInfo popSong;
@@ -164,7 +164,7 @@ public class ListPanel extends Panel{
             Label date = new Label(cds.getDate());
             Label with = new Label(cds.getWith());
             Label score = new Label(cds.getScore());
-            Button btEdit = new Button("•ÒW");
+            Button btEdit = new Button("ç·¨é›†");
             btEdit.addActionListener(
                 (e)->{
                     if(popSong != null){
@@ -203,7 +203,7 @@ public class ListPanel extends Panel{
             for(SongData cds:cdsa){
                 songList.add(cds.getFname());
             }
-            Button editButton = new Button("•ÒW");
+            Button editButton = new Button("ç·¨é›†");
             editButton.addActionListener(
                 (e)->{
                     if(popSong != null){
@@ -215,7 +215,7 @@ public class ListPanel extends Panel{
                     new ListDataEditDialog(library,cdl);
                 }
             );
-            Button deleteButton = new Button("íœ");
+            Button deleteButton = new Button("å‰Šé™¤");
             deleteButton.addActionListener(
                 (e)->{
                     if(popSong != null){
